@@ -1,35 +1,14 @@
-cmake_minimum_required(VERSION 3.10)
+set(target IO)
 
-# Set the project name
-project(IO)
-
-# Set the C++ standard
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
-
-# Add the source files
-set(SOURCES
-    Commands/CreateMap.hpp
-    Commands/March.hpp
-    Commands/SpawnHunter.hpp
-    Commands/SpawnSwordsman.hpp
-    Events/MapCreated.hpp
-    Events/MarchEnded.hpp
-    Events/MarchStarted.hpp
-    Events/UnitAttacked.hpp
-    Events/UnitDied.hpp
-    Events/UnitMoved.hpp
-    Events/UnitSpawned.hpp
-    System/CommandParser.hpp
-    System/CommandParser.cpp
-    System/EventLog.hpp
-    System/PrintDebug.hpp
-    System/details/CommandParserVisitor.hpp
-    System/details/PrintFieldVisitor.hpp
+add_library(${target} STATIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/Commands/CreateMap.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Events/MapCreated.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/System/CommandParser.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/System/CommandParser.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/System/EventLog.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/System/PrintDebug.hpp
 )
 
-# Add the library
-add_library(IO STATIC ${SOURCES})
+target_include_directories(${target} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
-# Include directories
-target_include_directories(IO PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_options(${target} PRIVATE -Wno-unknown-pragmas)
