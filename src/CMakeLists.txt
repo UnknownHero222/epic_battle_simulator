@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.10)
 project(TotalBattleSimulator)
 
 add_subdirectory(IO)
-add_subdirectory(Core)
 
 set(target TotalBattleSimulator)
 
