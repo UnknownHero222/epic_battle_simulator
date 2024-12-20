@@ -19,6 +19,7 @@
 #include "IO/System/PrintDebug.hpp"
 #include <memory>
 #include <ostream>
+#include <queue>
 #include <unordered_map>
 
 namespace sw::simulator {
@@ -34,7 +35,7 @@ public:
   void run();
 
   template <typename TCommand>
-  void createMap(std::ostream &stream, const TCommand &command) {
+  void createMap(std::ostream &stream, TCommand &command) {
     // static_assert(std::is_same_v<TCommand, sw::io::CreateMap>, "Invalid
     // command type for createMap");
 
@@ -43,12 +44,12 @@ public:
     }
 
     map_ = std::make_unique<Map>(command.width, command.height);
-    stream << "Map created with dimensions: " << command.width << "x"
-           << command.height << "\n";
+
+    eventLog_.log(1, MapCreated{command.width, command.height});
   }
 
   template <typename TCommand>
-  void spawnUnit(std::ostream &stream, const TCommand &command) {
+  void spawnUnit(std::ostream &stream, TCommand &command) {
     // static_assert(std::is_same_v<TCommand, sw::io::SpawnSwordsman> ||
     //               std::is_same_v<TCommand, sw::io::SpawnHunter>, "Invalid
     //               command type for spawnUnit");
@@ -78,29 +79,45 @@ public:
     units_.emplace(command.unitId, unit);
     cell.setUnit(std::make_shared<Unit>(unit));
 
-    // TODO debug here
+    eventLog_.log(1, UnitSpawned{command.unitId, unit.getUnitName(), command.x,
+                                 command.y});
   }
 
-  const Map &getMap() const {
-    if (!map_) {
-      throw std::runtime_error("Map is not initialized.");
+  template <typename TCommand>
+  void marchUnit(std::ostream &stream, TCommand &command) {
+    auto unit = getUnit(command.unitId);
+
+    if (!map_->isValidPosition(command.targetX, command.targetY)) {
+      throw std::out_of_range("Invalid target position.");
     }
 
-    return *map_;
+    auto &targetCell = map_->getCell(command.targetX, command.targetY);
+    if (!targetCell.is_empty()) {
+      throw std::runtime_error("Target cell is already occupied.");
+    }
+
+    auto &currentCell = map_->getCell(unit.getX(), unit.getY());
+    // currentCell.removeUnit();
+    // unit.setPosition(command.targetX, command.targetY);
+    targetCell.setUnit(std::make_shared<Unit>(unit));
+
+    if (unit.getX() == command.targetX && unit.getY() == command.targetY) {
+      eventLog_.log(1, MarchEnded{command.unitId, unit.getX(), unit.getY()});
+    } else {
+      eventLog_.log(1, UnitMoved{command.unitId, unit.getX(), unit.getY()});
+    }
   }
 
-  Unit getUnit(uint32_t unitId) const {
-    auto it = units_.find(unitId);
-    if (it == units_.end()) {
-      throw std::runtime_error("Unit with ID " + std::to_string(unitId) +
-                               " not found.");
-    }
-    return it->second;
-  }
+  const Map &getMap() const;
+  Unit getUnit(uint32_t unitId) const;
 
 private:
   std::unique_ptr<Map> map_;
   std::unordered_map<uint32_t, Unit> units_;
+  EventLog eventLog_;
+
+  uint32_t currentTick_{1};
+  std::queue<uint32_t> unitQueue_;
 };
 
 } // namespace sw::simulator

@@ -68,7 +68,9 @@ int main(int argc, char **argv) {
       .add<SpawnSwordsman>(
           [&](auto command) { simulator.spawnUnit(std::cout, command); })
       .add<SpawnHunter>(
-          [&](auto command) { simulator.spawnUnit(std::cout, command); });
+          [&](auto command) { simulator.spawnUnit(std::cout, command); })
+      .add<March>(
+          [&](auto command) { simulator.marchUnit(std::cout, command); });
 
   parser.parse(file);
 
@@ -79,9 +81,8 @@ int main(int argc, char **argv) {
   eventLog.log(1, MapCreated{10, 10});
   eventLog.log(1, UnitSpawned{1, "Swordsman", 0, 0});
   eventLog.log(1, UnitSpawned{2, "Hunter", 9, 0});
-
-  // eventLog.log(1, io::MarchStarted{1, 0, 0, 9, 0});
-  // eventLog.log(1, io::MarchStarted{2, 9, 0, 0, 0});
+  eventLog.log(1, io::MarchStarted{1, 0, 0, 9, 0});
+  eventLog.log(1, io::MarchStarted{2, 9, 0, 0, 0});
   // eventLog.log(1, io::UnitSpawned{3, "Swordsman", 0, 9});
   // eventLog.log(1, io::MarchStarted{3, 0, 9, 0, 0});
 

@@ -21,6 +21,17 @@ public:
   uint32_t getHP() const { return hp_; }
   uint32_t getStrength() const { return strength_; }
   bool isMoveable() const { return is_movable_; }
+  
+  std::string getUnitName() const {
+    switch (type_) {
+    case UnitSwordsman:
+      return "Swordsman";
+    case UnitHunter:
+      return "Hunter";
+    default:
+      return "Unknown";
+    }
+  }
 
 protected:
   uint32_t id_;
@@ -29,6 +40,7 @@ protected:
   uint32_t y_;
   uint32_t hp_;
   uint32_t strength_;
+  std::string name_;
   bool is_movable_;
 };
 
