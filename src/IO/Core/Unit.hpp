@@ -7,6 +7,7 @@ enum UnitType { UnitSwordsman, UnitHunter };
 
 class Unit {
 public:
+  Unit() = default;
   explicit Unit(uint32_t id, UnitType type, uint32_t x, uint32_t y, uint32_t hp,
                 uint32_t strength)
       : id_(id), type_(type), x_(x), y_(y), hp_(hp), strength_(strength) {}

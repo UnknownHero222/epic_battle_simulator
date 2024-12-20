@@ -66,18 +66,17 @@ public:
       throw std::runtime_error("Cell is already occupied.");
     }
 
-    std::shared_ptr<Unit> unit;
+    Unit unit;
     if constexpr (std::is_same_v<TCommand, SpawnSwordsman>) {
-      unit = std::make_shared<Swordsman>(command.unitId, command.x, command.y,
-                                         command.hp, command.strength);
+      unit = Swordsman(command.unitId, command.x, command.y, command.hp,
+                       command.strength);
     } else if constexpr (std::is_same_v<TCommand, SpawnHunter>) {
-      unit = std::make_shared<Hunter>(command.unitId, command.x, command.y,
-                                      command.hp, command.strength,
-                                      command.agility, command.range);
+      unit = Hunter(command.unitId, command.x, command.y, command.hp,
+                    command.strength, command.agility, command.range);
     }
 
     units_.emplace(command.unitId, unit);
-    cell.setUnit(unit);
+    cell.setUnit(std::make_shared<Unit>(unit));
 
     // TODO debug here
   }

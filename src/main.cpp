@@ -1,3 +1,4 @@
+#include "IO/System/EventLog.hpp"
 #include "Simulator.hpp"
 
 #include <fstream>
@@ -58,24 +59,16 @@ int main(int argc, char **argv) {
   }
 
   // Example for the brutal debugging
-  core::Map map(0, 0);
+  Simulator simulator;
 
-  // Code for example...
-
-  std::cout << "Commands:\n";
-  io::CommandParser parser;
+  CommandParser parser;
   parser
-      .add<io::CreateMap>(
-          [&](auto command) { createMap(std::cout, command, map); })
-      .add<io::SpawnSwordsman>(
-          [&](auto command) { spawnUnit(std::cout, command, map); })
-      .add<io::SpawnHunter>(
-          [&](auto command) { spawnUnit(std::cout, command, map); });
-  // parser.add<io::CreateMap>([](auto command) { printDebug(std::cout,
-  // command); }) 	.add<io::SpawnSwordsman>([](auto command) {
-  // printDebug(std::cout, command); }) 	.add<io::SpawnHunter>([](auto
-  // command) { printDebug(std::cout, command); }) .add<io::March>([](auto
-  // command) { printDebug(std::cout, command); });
+      .add<CreateMap>(
+          [&](auto command) { simulator.createMap(std::cout, command); })
+      .add<SpawnSwordsman>(
+          [&](auto command) { simulator.spawnUnit(std::cout, command); })
+      .add<SpawnHunter>(
+          [&](auto command) { simulator.spawnUnit(std::cout, command); });
 
   parser.parse(file);
 
@@ -83,9 +76,10 @@ int main(int argc, char **argv) {
 
   EventLog eventLog;
 
-  eventLog.log(1, io::MapCreated{10, 10});
-  eventLog.log(1, io::UnitSpawned{1, "Swordsman", 0, 0});
-  eventLog.log(1, io::UnitSpawned{2, "Hunter", 9, 0});
+  eventLog.log(1, MapCreated{10, 10});
+  eventLog.log(1, UnitSpawned{1, "Swordsman", 0, 0});
+  eventLog.log(1, UnitSpawned{2, "Hunter", 9, 0});
+
   // eventLog.log(1, io::MarchStarted{1, 0, 0, 9, 0});
   // eventLog.log(1, io::MarchStarted{2, 9, 0, 0, 0});
   // eventLog.log(1, io::UnitSpawned{3, "Swordsman", 0, 9});
