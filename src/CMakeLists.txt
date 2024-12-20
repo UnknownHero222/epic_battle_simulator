@@ -6,7 +6,7 @@ add_subdirectory(IO)
 
 set(target TotalBattleSimulator)
 
-add_executable(${target} Main.cpp)
+add_executable(${target} Main.cpp Simulator.hpp)
 
 target_link_libraries(${target} PRIVATE Core IO)
 

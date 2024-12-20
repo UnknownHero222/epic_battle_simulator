@@ -19,6 +19,7 @@ public:
   uint32_t getY() const { return y_; }
   uint32_t getHP() const { return hp_; }
   uint32_t getStrength() const { return strength_; }
+  bool isMoveable() const { return is_movable_; }
 
 protected:
   uint32_t id_;
@@ -27,6 +28,7 @@ protected:
   uint32_t y_;
   uint32_t hp_;
   uint32_t strength_;
+  bool is_movable_;
 };
 
 } // namespace sw::core
