@@ -20,6 +20,12 @@ public:
   uint32_t getY() const { return y_; }
   uint32_t getHP() const { return hp_; }
   uint32_t getStrength() const { return strength_; }
+  uint32_t getTargetX() const { return targetX_; }
+  uint32_t getTargetY() const { return targetY_; }
+  void setTarget(uint32_t x, uint32_t y) {
+    targetX_ = x;
+    targetY_ = y;
+  }
   bool isMoveable() const { return is_movable_; }
   
   std::string getUnitName() const {
@@ -40,6 +46,8 @@ protected:
   uint32_t y_;
   uint32_t hp_;
   uint32_t strength_;
+  uint32_t targetX_;
+  uint32_t targetY_;
   std::string name_;
   bool is_movable_;
 };

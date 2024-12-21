@@ -91,21 +91,20 @@ public:
       throw std::out_of_range("Invalid target position.");
     }
 
-    auto &targetCell = map_->getCell(command.targetX, command.targetY);
-    if (!targetCell.is_empty()) {
-      throw std::runtime_error("Target cell is already occupied.");
-    }
+    unit.setTarget(command.targetX, command.targetY);
 
-    auto &currentCell = map_->getCell(unit.getX(), unit.getY());
-    // currentCell.removeUnit();
-    // unit.setPosition(command.targetX, command.targetY);
-    targetCell.setUnit(std::make_shared<Unit>(unit));
+    //auto &targetCell = map_->getCell(command.targetX, command.targetY);
 
-    if (unit.getX() == command.targetX && unit.getY() == command.targetY) {
-      eventLog_.log(1, MarchEnded{command.unitId, unit.getX(), unit.getY()});
-    } else {
-      eventLog_.log(1, UnitMoved{command.unitId, unit.getX(), unit.getY()});
-    }
+    // auto &currentCell = map_->getCell(unit.getX(), unit.getY());
+    // // currentCell.removeUnit();
+    // // unit.setPosition(command.targetX, command.targetY);
+    // targetCell.setUnit(std::make_shared<Unit>(unit));
+
+    // if (unit.getX() == command.targetX && unit.getY() == command.targetY) {
+    //   eventLog_.log(1, MarchEnded{command.unitId, unit.getX(), unit.getY()});
+    // } else {
+    //   eventLog_.log(1, UnitMoved{command.unitId, unit.getX(), unit.getY()});
+    // }
   }
 
   const Map &getMap() const;
