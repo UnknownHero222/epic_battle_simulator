@@ -46,6 +46,7 @@ void Simulator::run() {
 AffectedUnit Simulator::isAffectPossible(const Unit &activeUnit) {
   int range = activeUnit.getAffectRange();
   std::shared_ptr<Unit> lowestHpTarget{nullptr};
+  uint32_t lowestHpUnitId{0};
   uint32_t minHP{std::numeric_limits<uint32_t>::max()};
 
   // TODO возможна оптизимизация по диагоналям
@@ -62,7 +63,7 @@ AffectedUnit Simulator::isAffectPossible(const Unit &activeUnit) {
             // Простенькая приоритизация, бить будем по слабейшему
             if (target->getHP() < minHP) {
               minHP = target->getHP();
-              lowestHpTarget = target;
+              lowestHpUnitId = target->getId();
             }
           }
         }
@@ -70,7 +71,7 @@ AffectedUnit Simulator::isAffectPossible(const Unit &activeUnit) {
     }
   }
 
-  if (lowestHpTarget) {
+  if (lowestHpUnitId != 0) {
     return std::make_tuple(true, lowestHpTarget->getId());
   }
 
