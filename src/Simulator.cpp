@@ -23,8 +23,9 @@ void Simulator::run() {
       if (isAffected) {
         unit.attack(units_[targetId]);
       } else {
-        // TODO
-        unit.march(0, 0);
+#warning moving units to the correct cell on the map
+        auto [nextX, nextY] = getNextStep(unit);
+        unit.march(nextX, nextY);
       }
 
       if (unit.getHP() > 0) {
@@ -72,6 +73,19 @@ AffectedUnit Simulator::isAffectPossible(const Unit &activeUnit) {
   }
 
   return std::make_tuple(false, 0);
+}
+
+Coordinates Simulator::getNextStep(const Unit &unit) {
+  uint32_t currentX = unit.getX();
+  uint32_t currentY = unit.getY();
+
+  uint32_t targetX = unit.getTargetX();
+  uint32_t targetY = unit.getTargetY();
+
+  uint32_t dx = (targetX > currentX) ? 1 : (targetX < currentX) ? -1 : 0;
+  uint32_t dy = (targetY > currentY) ? 1 : (targetY < currentY) ? -1 : 0;
+
+  return {currentX + dx, currentY + dy};
 }
 
 const Map &Simulator::getMap() const {

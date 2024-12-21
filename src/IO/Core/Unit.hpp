@@ -32,10 +32,7 @@ public:
   uint32_t getStrength() const { return strength_; }
   uint32_t getTargetX() const { return targetX_; }
   uint32_t getTargetY() const { return targetY_; }
-  void setTarget(uint32_t x, uint32_t y) {
-    targetX_ = x;
-    targetY_ = y;
-  }
+  void setTarget(uint32_t x, uint32_t y);
   bool isMoveable() const { return is_movable_; }
 
 protected:

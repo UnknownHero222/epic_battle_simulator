@@ -20,8 +20,8 @@
 #include <memory>
 #include <ostream>
 #include <queue>
-#include <unordered_map>
 #include <tuple>
+#include <unordered_map>
 
 namespace sw::simulator {
 
@@ -29,6 +29,7 @@ using namespace sw::io;
 using namespace sw::core;
 
 using AffectedUnit = std::tuple<bool, uint32_t>;
+using Coordinates = std::pair<uint32_t, uint32_t>;
 
 class Simulator {
 public:
@@ -37,6 +38,7 @@ public:
 
   void run();
   AffectedUnit isAffectPossible(const Unit &activeUnit);
+  Coordinates getNextStep(const Unit &unit);
 
   template <typename TCommand>
   void createMap(std::ostream &stream, TCommand &command) {
