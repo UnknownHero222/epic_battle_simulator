@@ -51,7 +51,7 @@ public:
 
     map_ = std::make_unique<Map>(command.width, command.height);
 
-    eventLog_.log(1, MapCreated{command.width, command.height});
+    eventLog_.log(currentTick_, MapCreated{command.width, command.height});
   }
 
   template <typename TCommand>
@@ -85,7 +85,7 @@ public:
     units_.emplace(command.unitId, unit);
     cell.setUnit(std::make_shared<Unit>(unit));
 
-    eventLog_.log(1, UnitSpawned{command.unitId, unit.getUnitName(), command.x,
+    eventLog_.log(currentTick_, UnitSpawned{command.unitId, unit.getUnitName(), command.x,
                                  command.y});
   }
 
