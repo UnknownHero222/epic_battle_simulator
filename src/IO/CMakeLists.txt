@@ -9,10 +9,10 @@ add_library(${target} STATIC
     ${CMAKE_CURRENT_SOURCE_DIR}/System/PrintDebug.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/Map.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/MapVisitor.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Unit.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Unit.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/UnitVisitor.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Swordsman.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Hunter.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Swordsman.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Hunter.cpp
 )
 
 target_include_directories(${target} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

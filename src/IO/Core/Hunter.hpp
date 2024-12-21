@@ -10,6 +10,8 @@ public:
       : Unit(id, UnitType::UnitHunter, x, y, hp, strength), agility_(agility),
         range_(range) {}
 
+  void attack(Unit &targetUnit) override;
+
   uint32_t getAgility() const { return agility_; }
   uint32_t getRange() const { return range_; }
 

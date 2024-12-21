@@ -14,11 +14,18 @@ public:
 
   virtual ~Unit() = default;
 
+  void march(uint32_t targetX, uint32_t targetY);
+  #warning "Check this again later"
+  virtual void attack(Unit &unit){};
+
+  std::string getUnitName() const;
+
   uint32_t getId() const { return id_; }
   UnitType getType() const { return type_; }
   uint32_t getX() const { return x_; }
   uint32_t getY() const { return y_; }
   uint32_t getHP() const { return hp_; }
+  void setHP(uint32_t hp) { hp_ = hp; }
   uint32_t getStrength() const { return strength_; }
   uint32_t getTargetX() const { return targetX_; }
   uint32_t getTargetY() const { return targetY_; }
@@ -27,17 +34,6 @@ public:
     targetY_ = y;
   }
   bool isMoveable() const { return is_movable_; }
-  
-  std::string getUnitName() const {
-    switch (type_) {
-    case UnitSwordsman:
-      return "Swordsman";
-    case UnitHunter:
-      return "Hunter";
-    default:
-      return "Unknown";
-    }
-  }
 
 protected:
   uint32_t id_;
