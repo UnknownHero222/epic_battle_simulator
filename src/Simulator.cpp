@@ -30,6 +30,8 @@ void Simulator::run() {
 
       if (unit.getHP() > 0) {
         unitQueue_.push(unitId);
+      } else {
+        units_.erase(unitId);
       }
     }
 
