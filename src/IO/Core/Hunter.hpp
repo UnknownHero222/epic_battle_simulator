@@ -12,6 +12,7 @@ public:
 
   void attack(Unit &targetUnit) override;
 
+  uint32_t getAffectRange() const override { return range_; }
   uint32_t getAgility() const { return agility_; }
   uint32_t getRange() const { return range_; }
 

@@ -21,11 +21,14 @@
 #include <ostream>
 #include <queue>
 #include <unordered_map>
+#include <tuple>
 
 namespace sw::simulator {
 
 using namespace sw::io;
 using namespace sw::core;
+
+using AffectedUnit = std::tuple<bool, uint32_t>;
 
 class Simulator {
 public:
@@ -33,6 +36,7 @@ public:
   ~Simulator() = default;
 
   void run();
+  AffectedUnit isAffectPossible(const Unit &activeUnit);
 
   template <typename TCommand>
   void createMap(std::ostream &stream, TCommand &command) {
@@ -93,7 +97,7 @@ public:
 
     unit.setTarget(command.targetX, command.targetY);
 
-    //auto &targetCell = map_->getCell(command.targetX, command.targetY);
+    // auto &targetCell = map_->getCell(command.targetX, command.targetY);
 
     // auto &currentCell = map_->getCell(unit.getX(), unit.getY());
     // // currentCell.removeUnit();

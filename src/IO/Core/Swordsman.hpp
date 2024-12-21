@@ -9,6 +9,8 @@ public:
       : Unit(id, UnitType::UnitSwordsman, x, y, hp, strength) {}
 
   void attack(Unit &targetUnit) override;
+
+  uint32_t getAffectRange() const override { return 1; };
 };
 
 } // namespace sw::core

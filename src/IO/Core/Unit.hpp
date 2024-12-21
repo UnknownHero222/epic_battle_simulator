@@ -15,8 +15,10 @@ public:
   virtual ~Unit() = default;
 
   void march(uint32_t targetX, uint32_t targetY);
-  #warning "Check this again later"
+#warning "Check this again later"
   virtual void attack(Unit &unit){};
+
+  virtual uint32_t getAffectRange() const {};
 
   std::string getUnitName() const;
 

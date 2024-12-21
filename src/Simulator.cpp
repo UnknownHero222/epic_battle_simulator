@@ -18,11 +18,13 @@ void Simulator::run() {
         continue;
       }
 
-      // is it possible to attack now
-      if (true) {
-        // attack
+      auto &currentCell = map_->getCell(unit.getTargetX(), unit.getTargetY());
+      auto [isAffected, targetId] = isAffectPossible(unit);
+      if (isAffected) {
+        unit.attack(units_[targetId]);
       } else {
-        // move
+        // TODO
+        unit.march(0, 0);
       }
 
       if (unit.getHP() > 0) {
@@ -36,6 +38,40 @@ void Simulator::run() {
 
     currentTick_++;
   }
+}
+
+AffectedUnit Simulator::isAffectPossible(const Unit &activeUnit) {
+  int range = activeUnit.getAffectRange();
+  std::shared_ptr<Unit> lowestHpTarget{nullptr};
+  uint32_t minHP{std::numeric_limits<uint32_t>::max()};
+
+  // TODO возможна оптизимизация по диагоналям
+  for (int dx = -range; dx <= range; ++dx) {
+    for (int dy = -range; dy <= range; ++dy) {
+      int nx = activeUnit.getX() + dx;
+      int ny = activeUnit.getY() + dy;
+
+      if (map_->isValidPosition(nx, ny)) {
+        auto &cell = map_->getCell(nx, ny);
+        if (!cell.is_empty()) {
+          auto target = cell.getUnit();
+          if (target && target->getId() != activeUnit.getId()) {
+            // Простенькая приоритизация, бить будем по слабейшему
+            if (target->getHP() < minHP) {
+              minHP = target->getHP();
+              lowestHpTarget = target;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  if (lowestHpTarget) {
+    return std::make_tuple(true, lowestHpTarget->getId());
+  }
+
+  return std::make_tuple(false, 0);
 }
 
 const Map &Simulator::getMap() const {
