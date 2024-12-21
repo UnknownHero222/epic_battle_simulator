@@ -33,7 +33,7 @@ public:
   uint32_t getTargetX() const { return targetX_; }
   uint32_t getTargetY() const { return targetY_; }
   void setTarget(uint32_t x, uint32_t y);
-  bool isMoveable() const { return is_movable_; }
+  bool isMovable() const { return is_movable_; }
 
 protected:
   uint32_t id_;

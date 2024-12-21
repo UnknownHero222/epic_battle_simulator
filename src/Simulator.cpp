@@ -19,7 +19,8 @@ void Simulator::run() {
         continue;
       }
 
-      auto &currentCell = map_->getCell(unit.getTargetX(), unit.getTargetY());
+      auto &currentCell = map_->getCell(unit.getX(), unit.getY());
+      
       auto [isAffected, targetId] = isAffectPossible(unit);
       if (isAffected) {
         unit.attack(units_[targetId]);
@@ -34,9 +35,9 @@ void Simulator::run() {
         } else {
           eventLog_.log(currentTick_, UnitMoved{unit.getId(), nextX, nextY});
         }
-
       }
 
+      // погибших отбрасываем, выжившие снова в бой
       if (unit.getHP() > 0) {
         unitQueue_.push(unitId);
       } else {

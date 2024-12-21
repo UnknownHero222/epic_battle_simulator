@@ -79,14 +79,16 @@ public:
                        command.strength);
     } else if constexpr (std::is_same_v<TCommand, SpawnHunter>) {
       unit = Hunter(command.unitId, command.x, command.y, command.hp,
-                    command.strength, command.agility, command.range);
+                    command.agility, command.strength, command.range);
     }
 
     units_.emplace(command.unitId, unit);
     cell.setUnit(std::make_shared<Unit>(unit));
 
-    eventLog_.log(currentTick_, UnitSpawned{command.unitId, unit.getUnitName(), command.x,
-                                 command.y});
+    unitQueue_.push(command.unitId);
+
+    eventLog_.log(currentTick_, UnitSpawned{command.unitId, unit.getUnitName(),
+                                            command.x, command.y});
   }
 
   template <typename TCommand>
@@ -96,21 +98,14 @@ public:
     if (!map_->isValidPosition(command.targetX, command.targetY)) {
       throw std::out_of_range("Invalid target position.");
     }
-
-    unit.setTarget(command.targetX, command.targetY);
-
-    // auto &targetCell = map_->getCell(command.targetX, command.targetY);
-
-    // auto &currentCell = map_->getCell(unit.getX(), unit.getY());
-    // // currentCell.removeUnit();
-    // // unit.setPosition(command.targetX, command.targetY);
-    // targetCell.setUnit(std::make_shared<Unit>(unit));
-
-    // if (unit.getX() == command.targetX && unit.getY() == command.targetY) {
-    //   eventLog_.log(1, MarchEnded{command.unitId, unit.getX(), unit.getY()});
-    // } else {
-    //   eventLog_.log(1, UnitMoved{command.unitId, unit.getX(), unit.getY()});
-    // }
+    
+    if (units_.find(command.unitId) != units_.end()) {
+      auto &unit = units_.at(command.unitId);
+      unit.setTarget(command.targetX, command.targetY);
+    } else {
+      throw std::runtime_error("Unit ID " + std::to_string(command.unitId) +
+                               " not found!");
+    }
   }
 
   const Map &getMap() const;
