@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <unordered_set>
 
 namespace sw::core {
 
@@ -48,6 +49,8 @@ protected:
   uint32_t targetY_;
   std::string name_;
   bool is_movable_;
+
+  std::unordered_set<uint32_t> alliedUnits_;
 };
 
 } // namespace sw::core
