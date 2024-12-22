@@ -9,42 +9,6 @@ using namespace sw::core;
 using namespace sw::io;
 using namespace sw::simulator;
 
-// TODO вынести потом в собственный класс
-template <typename TCommand>
-void createMap(std::ostream &stream, TCommand &command, sw::core::Map &map) {
-  static_assert(std::is_same_v<TCommand, sw::io::CreateMap>,
-                "Invalid command type for createMap");
-
-  sw::printDebug(stream, command);
-  sw::core::MapVisitor visitor;
-  command.visit(visitor);
-  map = visitor.build();
-}
-
-template <typename TCommand>
-void spawnUnit(std::ostream &stream, TCommand &command, sw::core::Map &map) {
-  //   static_assert(std::is_same_v<TCommand, sw::io::SpawnSwordsman> ||
-  //                 std::is_same_v<TCommand, sw::io::SpawnHunter>, "Invalid
-  //                 command type for spawnUnit");
-
-  if (!map.isValidPosition(command.x, command.y)) {
-    throw std::out_of_range("Invalid spawn position.");
-  }
-
-  auto &cell = map.getCell(command.x, command.y);
-  if (!cell.is_empty()) {
-    throw std::runtime_error("Cell is already occupied.");
-  }
-
-  core::UnitVisitor visitor(command.Name);
-  command.visit(visitor);
-  std::shared_ptr<core::Unit> unit = visitor.build();
-
-  cell.setUnit(unit);
-
-  printDebug(stream, command);
-}
-
 int main(int argc, char **argv) {
   using namespace sw;
 
