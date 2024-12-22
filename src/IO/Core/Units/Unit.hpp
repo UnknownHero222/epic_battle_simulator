@@ -14,7 +14,7 @@ public:
 
   virtual ~Unit() = default;
 
-  void march(uint32_t targetX, uint32_t targetY);
+  virtual void march(uint32_t targetX, uint32_t targetY);
 #warning "Check this again later"
   virtual uint32_t attack(Unit &targetUnit){};
 

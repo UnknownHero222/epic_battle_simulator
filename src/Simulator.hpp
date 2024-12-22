@@ -121,7 +121,7 @@ public:
 private:
   const Map &getMap() const;
 
-  void processUnitTurn(uint32_t unitId);
+  void handleUnitAction(uint32_t unitId);
   AffectedUnit isAffectPossible(const Unit &activeUnit);
 
   void processAttack(std::shared_ptr<Unit> &unit, uint32_t targetId);
