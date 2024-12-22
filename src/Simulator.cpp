@@ -15,9 +15,6 @@ void Simulator::run() {
       unitQueue_.pop();
 
       auto unit = getUnit(unitId);
-      if (unit.getHP() <= 0) {
-        continue;
-      }
 
       auto &currentCell = map_->getCell(unit.getX(), unit.getY());
       
@@ -35,6 +32,11 @@ void Simulator::run() {
         } else {
           eventLog_.log(currentTick_, UnitMoved{unit.getId(), nextX, nextY});
         }
+
+        //auto &nextCell = map_->getCell(nextX, nextY);
+        //nextCell.setUnit(unit);
+        currentCell.removeUnit();
+
       }
 
       // погибших отбрасываем, выжившие снова в бой

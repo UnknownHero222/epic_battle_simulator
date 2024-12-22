@@ -25,6 +25,8 @@ public:
 
     void setUnit(std::shared_ptr<Unit> unit) { unit_ = std::move(unit); }
 
+    void removeUnit() { unit_.reset(); }
+
     std::shared_ptr<Unit> getUnit() const { return unit_; }
 
   private:

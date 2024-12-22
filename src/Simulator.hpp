@@ -40,6 +40,9 @@ public:
   AffectedUnit isAffectPossible(const Unit &activeUnit);
   Coordinates getNextStep(const Unit &unit);
 
+  const Map &getMap() const;
+  Unit getUnit(uint32_t unitId) const;
+
   template <typename TCommand>
   void createMap(std::ostream &stream, TCommand &command) {
     // static_assert(std::is_same_v<TCommand, sw::io::CreateMap>, "Invalid
@@ -98,7 +101,7 @@ public:
     if (!map_->isValidPosition(command.targetX, command.targetY)) {
       throw std::out_of_range("Invalid target position.");
     }
-    
+
     if (units_.find(command.unitId) != units_.end()) {
       auto &unit = units_.at(command.unitId);
       unit.setTarget(command.targetX, command.targetY);
@@ -107,9 +110,6 @@ public:
                                " not found!");
     }
   }
-
-  const Map &getMap() const;
-  Unit getUnit(uint32_t unitId) const;
 
 private:
   std::unique_ptr<Map> map_;
