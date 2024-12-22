@@ -10,7 +10,7 @@ public:
       : Unit(id, UnitType::UnitHunter, x, y, hp, strength), agility_(agility),
         range_(range) {}
 
-  void attack(Unit &targetUnit) override;
+  void attack(std::shared_ptr<Unit> targetUnit) override;
 
   uint32_t getAffectRange() const override { return range_; }
   uint32_t getAgility() const { return agility_; }

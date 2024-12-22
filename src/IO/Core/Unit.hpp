@@ -17,7 +17,7 @@ public:
 
   void march(uint32_t targetX, uint32_t targetY);
 #warning "Check this again later"
-  virtual void attack(Unit &unit){};
+  virtual void attack(std::shared_ptr<Unit> targetUnit){};
 
   virtual uint32_t getAffectRange() const {};
 

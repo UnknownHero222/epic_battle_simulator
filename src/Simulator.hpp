@@ -41,7 +41,7 @@ public:
   Coordinates getNextStep(const Unit &unit);
 
   const Map &getMap() const;
-  Unit getUnit(uint32_t unitId) const;
+  std::shared_ptr<Unit> getUnit(uint32_t unitId);
 
   template <typename TCommand>
   void createMap(std::ostream &stream, TCommand &command) {
@@ -76,21 +76,22 @@ public:
       throw std::runtime_error("Cell is already occupied.");
     }
 
-    Unit unit;
+    std::shared_ptr<Unit> unit{nullptr};
     if constexpr (std::is_same_v<TCommand, SpawnSwordsman>) {
-      unit = Swordsman(command.unitId, command.x, command.y, command.hp,
-                       command.strength);
+      unit = std::make_shared<Swordsman>(command.unitId, command.x, command.y,
+                                         command.hp, command.strength);
     } else if constexpr (std::is_same_v<TCommand, SpawnHunter>) {
-      unit = Hunter(command.unitId, command.x, command.y, command.hp,
-                    command.agility, command.strength, command.range);
+      unit = std::make_shared<Hunter>(command.unitId, command.x, command.y,
+                                      command.hp, command.agility,
+                                      command.strength, command.range);
     }
 
     units_.emplace(command.unitId, unit);
-    cell.setUnit(std::make_shared<Unit>(unit));
+    cell.setUnit(unit);
 
     unitQueue_.push(command.unitId);
 
-    eventLog_.log(currentTick_, UnitSpawned{command.unitId, unit.getUnitName(),
+    eventLog_.log(currentTick_, UnitSpawned{command.unitId, unit->getUnitName(),
                                             command.x, command.y});
   }
 
@@ -104,7 +105,7 @@ public:
 
     if (units_.find(command.unitId) != units_.end()) {
       auto &unit = units_.at(command.unitId);
-      unit.setTarget(command.targetX, command.targetY);
+      unit->setTarget(command.targetX, command.targetY);
     } else {
       throw std::runtime_error("Unit ID " + std::to_string(command.unitId) +
                                " not found!");
@@ -113,7 +114,7 @@ public:
 
 private:
   std::unique_ptr<Map> map_;
-  std::unordered_map<uint32_t, Unit> units_;
+  std::unordered_map<uint32_t, std::shared_ptr<Unit>> units_;
   EventLog eventLog_;
 
   uint32_t currentTick_{1};
