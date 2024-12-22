@@ -33,8 +33,8 @@ void Simulator::run() {
           eventLog_.log(currentTick_, UnitMoved{unit->getId(), nextX, nextY});
         }
 
-        // auto &nextCell = map_->getCell(nextX, nextY);
-        // nextCell.setUnit(unit);
+        auto &nextCell = map_->getCell(nextX, nextY);
+        nextCell.setUnit(unit);
         currentCell.removeUnit();
       }
 
@@ -57,8 +57,7 @@ void Simulator::run() {
 
 AffectedUnit Simulator::isAffectPossible(const Unit &activeUnit) {
   int range = activeUnit.getAffectRange();
-  std::shared_ptr<Unit> lowestHpTarget{nullptr};
-  uint32_t lowestHpUnitId{0};
+  uint32_t targetUnitId{0};
   uint32_t minHP{std::numeric_limits<uint32_t>::max()};
 
   // TODO возможна оптизимизация по диагоналям
@@ -70,12 +69,12 @@ AffectedUnit Simulator::isAffectPossible(const Unit &activeUnit) {
       if (map_->isValidPosition(nx, ny)) {
         auto &cell = map_->getCell(nx, ny);
         if (!cell.is_empty()) {
-          auto target = cell.getUnit();
-          if (target && target->getId() != activeUnit.getId()) {
+          auto targetCandidate = cell.getUnit();
+          if (targetCandidate && targetCandidate->getId() != activeUnit.getId()) {
             // Простенькая приоритизация, бить будем по слабейшему
-            if (target->getHP() < minHP) {
-              minHP = target->getHP();
-              lowestHpUnitId = target->getId();
+            if (targetCandidate->getHP() < minHP) {
+              minHP = targetCandidate->getHP();
+              targetUnitId = targetCandidate->getId();
             }
           }
         }
@@ -83,8 +82,8 @@ AffectedUnit Simulator::isAffectPossible(const Unit &activeUnit) {
     }
   }
 
-  if (lowestHpUnitId != 0) {
-    return std::make_tuple(true, lowestHpTarget->getId());
+  if (targetUnitId != 0) {
+    return std::make_tuple(true, targetUnitId);
   }
 
   return std::make_tuple(false, 0);
