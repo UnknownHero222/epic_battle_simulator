@@ -69,6 +69,8 @@ int main(int argc, char **argv) {
           [&](auto command) { simulator.spawnUnit(std::cout, command); })
       .add<SpawnHunter>(
           [&](auto command) { simulator.spawnUnit(std::cout, command); })
+      .add<SpawnTower>(
+          [&](auto command) { simulator.spawnUnit(std::cout, command); })
       .add<March>(
           [&](auto command) { simulator.marchUnit(std::cout, command); });
 

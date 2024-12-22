@@ -27,6 +27,8 @@ std::string Unit::getUnitName() const {
     return "Swordsman";
   case UnitHunter:
     return "Hunter";
+  case UnitTower:
+    return "Tower";
   default:
     return "Unknown";
   }

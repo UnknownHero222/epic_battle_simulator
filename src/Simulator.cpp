@@ -14,6 +14,12 @@ void Simulator::run() {
       uint32_t unitId = unitQueue_.front();
       unitQueue_.pop();
 
+      // проверка жив ли еще юнит (если нет - в Зал Славы)
+      if (getUnit(unitId)->getHP() <= 0) {
+        handleDeadUnit(unitId);
+        continue;
+      }
+
       processUnitTurn(unitId);
 
       // Погибшие в зал славы, выжившие сражаются/двигаются дальше
@@ -86,6 +92,10 @@ void Simulator::processAttack(std::shared_ptr<Unit> &unit, uint32_t targetId) {
 }
 
 void Simulator::processMovement(std::shared_ptr<Unit> &unit) {
+  if (!unit->isMovable()) {
+    return;
+  }
+
   auto [nextX, nextY] = getNextStep(*unit);
   unit->march(nextX, nextY);
 
@@ -116,7 +126,11 @@ Coordinates Simulator::getNextStep(const Unit &unit) {
 }
 
 void Simulator::handleDeadUnit(uint32_t unitId) {
+  auto &currentCell = map_->getCell(getUnit(unitId)->getX(), getUnit(unitId)->getY());
+  currentCell.removeUnit();
+
   units_.erase(unitId);
+
   eventLog_.log(currentTick_, UnitDied{unitId});
 }
 

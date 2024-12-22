@@ -2,6 +2,7 @@
 
 #include "Hunter.hpp"
 #include "Swordsman.hpp"
+#include "Tower.hpp"
 #include "Unit.hpp"
 #include <memory>
 #include <stdexcept>

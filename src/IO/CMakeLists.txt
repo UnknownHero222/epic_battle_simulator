@@ -13,6 +13,7 @@ add_library(${target} STATIC
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/UnitVisitor.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/Swordsman.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/Hunter.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Tower.cpp
 )
 
 target_include_directories(${target} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
