@@ -4,18 +4,25 @@ namespace sw::core {
 
 static constexpr auto kHunterStrengthAttackDistance = 1;
 
-void Hunter::attack(std::shared_ptr<Unit> targetUnit) {
+uint32_t Hunter::attack(Unit &targetUnit) {
   // Компилятор встает на дыбы (придется кастить к int'у)
-
   uint32_t distance =
-      std::max(std::abs(static_cast<int>(targetUnit->getX() - x_)),
-               std::abs(static_cast<int>(targetUnit->getY() - y_)));
+      std::max(std::abs(static_cast<int>(targetUnit.getX() - x_)),
+               std::abs(static_cast<int>(targetUnit.getY() - y_)));
+
+  int targetHp = static_cast<int>(targetUnit.getHP());
+  int initTargetHp = targetHp;
 
   if (distance <= range_ && distance > kHunterStrengthAttackDistance) {
-    targetUnit->setHP(targetUnit->getHP() - agility_);
-  } else {
-    targetUnit->setHP(targetUnit->getHP() - strength_);
+    targetHp -= static_cast<int>(agility_);
+  } else if (distance == kHunterStrengthAttackDistance) {
+    targetHp -= static_cast<int>(strength_);
   }
+
+  targetHp = std::max(0, targetHp);
+  targetUnit.setHP(static_cast<uint32_t>(targetHp));
+
+  return initTargetHp - targetHp;
 }
 
 } // namespace sw::core

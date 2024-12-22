@@ -20,10 +20,11 @@ void Simulator::run() {
 
       auto [isAffected, targetId] = isAffectPossible(*unit);
       if (isAffected) {
-        unit->attack(units_[targetId]);
-        eventLog_.log(currentTick_, UnitAttacked{unit->getId(), targetId});
+        auto damageLevel = unit->attack(*units_[targetId]);
+        eventLog_.log(currentTick_,
+                      UnitAttacked{unit->getId(), targetId, damageLevel,
+                                   getUnit(targetId)->getHP()});
       } else {
-#warning moving units to the correct cell on the map
         auto [nextX, nextY] = getNextStep(*unit);
         unit->march(nextX, nextY);
 
@@ -48,6 +49,7 @@ void Simulator::run() {
     }
 
     if (unitQueue_.size() <= 1) {
+#warning "maybe we should anounce winner here"
       break;
     }
 
@@ -70,7 +72,8 @@ AffectedUnit Simulator::isAffectPossible(const Unit &activeUnit) {
         auto &cell = map_->getCell(nx, ny);
         if (!cell.is_empty()) {
           auto targetCandidate = cell.getUnit();
-          if (targetCandidate && targetCandidate->getId() != activeUnit.getId()) {
+          if (targetCandidate &&
+              targetCandidate->getId() != activeUnit.getId()) {
             // Простенькая приоритизация, бить будем по слабейшему
             if (targetCandidate->getHP() < minHP) {
               minHP = targetCandidate->getHP();
