@@ -20,7 +20,7 @@ void Simulator::run() {
         continue;
       }
 
-      processUnitTurn(unitId);
+      handleUnitAction(unitId);
 
       // Погибшие в зал славы, выжившие сражаются/двигаются дальше
       if (units_.at(unitId)->getHP() > 0) {
@@ -38,7 +38,7 @@ void Simulator::run() {
   }
 }
 
-void Simulator::processUnitTurn(uint32_t unitId) {
+void Simulator::handleUnitAction(uint32_t unitId) {
   auto unit = getUnit(unitId);
   auto &currentCell = map_->getCell(unit->getX(), unit->getY());
 
@@ -126,7 +126,8 @@ Coordinates Simulator::getNextStep(const Unit &unit) {
 }
 
 void Simulator::handleDeadUnit(uint32_t unitId) {
-  auto &currentCell = map_->getCell(getUnit(unitId)->getX(), getUnit(unitId)->getY());
+  auto &currentCell =
+      map_->getCell(getUnit(unitId)->getX(), getUnit(unitId)->getY());
   currentCell.removeUnit();
 
   units_.erase(unitId);
@@ -136,7 +137,9 @@ void Simulator::handleDeadUnit(uint32_t unitId) {
 
 bool Simulator::checkSimulationEnd() {
   if (unitQueue_.size() <= 1) {
-    eventLog_.log(currentTick_, UnitWon{unitQueue_.front()});
+    auto unit = getUnit(unitQueue_.front());
+    eventLog_.log(currentTick_,
+                  UnitWon{unitQueue_.front(), unit->getUnitName()});
     return true;
   }
 #warning "Second condition should be added here no units to move"
