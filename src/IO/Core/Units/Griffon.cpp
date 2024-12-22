@@ -7,7 +7,7 @@ namespace sw::core {
 Griffon::Griffon(uint32_t id, uint32_t x, uint32_t y, uint32_t hp,
                  uint32_t agility)
     : Unit(id, UnitType::UnitGriffon, x, y, hp), agility_(agility) {
-  is_movable_ = true;
+  isFlying_ = true;
 }
 
 void Griffon::march(uint32_t targetX, uint32_t targetY) {

@@ -66,7 +66,8 @@ AffectedUnit Simulator::isAffectPossible(const Unit &activeUnit) {
         if (!cell.is_empty()) {
           auto targetCandidate = cell.getUnit();
           if (targetCandidate &&
-              targetCandidate->getId() != activeUnit.getId()) {
+              targetCandidate->getId() != activeUnit.getId() &&
+              activeUnit.canAttack(*targetCandidate)) {
             // Простенькая приоритизация, бить будем по слабейшему
             if (targetCandidate->getHP() < minHP) {
               minHP = targetCandidate->getHP();

@@ -17,8 +17,8 @@ public:
   virtual void march(uint32_t targetX, uint32_t targetY);
 #warning "Check this again later"
   virtual uint32_t attack(Unit &targetUnit){};
-
   virtual uint32_t getAffectRange() const {};
+  virtual bool canAttack(const Unit &targetUnit) const { return true; };
 
   std::string getUnitName() const;
 
@@ -31,7 +31,8 @@ public:
   uint32_t getTargetX() const { return targetX_; }
   uint32_t getTargetY() const { return targetY_; }
   void setTarget(uint32_t x, uint32_t y);
-  bool isMovable() const { return is_movable_; }
+  bool isMovable() const { return isMovable_; }
+  bool isFlying() const { return isFlying_; }
 
 protected:
   uint32_t id_;
@@ -42,7 +43,8 @@ protected:
   uint32_t targetX_;
   uint32_t targetY_;
   std::string name_;
-  bool is_movable_;
+  bool isMovable_{true};
+  bool isFlying_{false};
 
   std::unordered_set<uint32_t> alliedUnits_;
 };

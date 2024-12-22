@@ -12,4 +12,8 @@ uint32_t Swordsman::attack(Unit &targetUnit) {
   return strength_;
 }
 
+bool Swordsman::canAttack(const Unit &targetUnit) const {
+  return (targetUnit.isFlying()) ? false : true;
+}
+
 } // namespace sw::core

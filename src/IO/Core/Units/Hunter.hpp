@@ -9,7 +9,6 @@ public:
                   uint32_t agility, uint32_t strength, uint32_t range)
       : Unit(id, UnitType::UnitHunter, x, y, hp), agility_(agility), strength_(strength),
         range_(range) {
-          is_movable_ = true;
         }
 
   uint32_t attack(Unit &targetUnit) override;
