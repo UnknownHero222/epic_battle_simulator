@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Hunter.hpp"
-#include "Swordsman.hpp"
-#include "Tower.hpp"
-#include "Unit.hpp"
+#include "Units/Unit.hpp"
+#include "Units/Hunter.hpp"
+#include "Units/Swordsman.hpp"
+#include "Units/Tower.hpp"
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -17,6 +17,10 @@ public:
       unitType_ = UnitType::UnitSwordsman;
     } else if (name == "SPAWN_HUNTER") {
       unitType_ = UnitType::UnitHunter;
+    } else if (name == "SPAWN_TOWER") {
+      unitType_ = UnitType::UnitTower;
+    } else {
+      throw std::runtime_error("Unsupported unit type");
     }
   }
 
@@ -45,6 +49,8 @@ public:
     case UnitType::UnitHunter:
       return std::make_shared<Hunter>(unitId_, x_, y_, hp_, strength_, agility_,
                                       range_);
+    case UnitType::UnitTower:
+      return std::make_shared<Tower>(unitId_, x_, y_, hp_, power_, range_);
     default:
       break;
     }
@@ -54,7 +60,7 @@ public:
 
 private:
   UnitType unitType_;
-  uint32_t unitId_, x_, y_, hp_, strength_, agility_, range_;
+  uint32_t unitId_, x_, y_, hp_, strength_, agility_, range_, power_;
 };
 
 } // namespace sw::core

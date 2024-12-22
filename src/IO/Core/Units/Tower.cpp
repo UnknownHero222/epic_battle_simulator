@@ -8,7 +8,7 @@
 namespace sw::core {
 
     Tower::Tower(uint32_t id, uint32_t x, uint32_t y, uint32_t hp, uint32_t power, uint32_t range)
-    : Unit(id, UnitType::UnitHunter, x, y, hp), power_(power), range_(range) {
+    : Unit(id, UnitType::UnitTower, x, y, hp), power_(power), range_(range) {
         is_movable_ = false;
 }
 
