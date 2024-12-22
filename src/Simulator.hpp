@@ -14,6 +14,7 @@
 #include "IO/Events/UnitDied.hpp"
 #include "IO/Events/UnitMoved.hpp"
 #include "IO/Events/UnitSpawned.hpp"
+#include "IO/Events/UnitWon.hpp"
 #include "IO/System/CommandParser.hpp"
 #include "IO/System/EventLog.hpp"
 #include "IO/System/PrintDebug.hpp"
@@ -37,11 +38,6 @@ public:
   ~Simulator() = default;
 
   void run();
-  AffectedUnit isAffectPossible(const Unit &activeUnit);
-  Coordinates getNextStep(const Unit &unit);
-
-  const Map &getMap() const;
-  std::shared_ptr<Unit> getUnit(uint32_t unitId);
 
   template <typename TCommand>
   void createMap(std::ostream &stream, TCommand &command) {
@@ -111,6 +107,22 @@ public:
                                " not found!");
     }
   }
+
+private:
+  const Map &getMap() const;
+
+  void processUnitTurn(uint32_t unitId);
+  AffectedUnit isAffectPossible(const Unit &activeUnit);
+
+  void processAttack(std::shared_ptr<Unit> &unit, uint32_t targetId);
+
+  void processMovement(std::shared_ptr<Unit> &unit);
+  Coordinates getNextStep(const Unit &unit);
+
+  void handleDeadUnit(uint32_t unitId);
+  bool checkSimulationEnd();
+
+  std::shared_ptr<Unit> getUnit(uint32_t unitId);
 
 private:
   std::unique_ptr<Map> map_;

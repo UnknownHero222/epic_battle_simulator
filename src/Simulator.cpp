@@ -7,53 +7,40 @@ namespace sw::simulator {
 using namespace sw::core;
 using namespace sw::io;
 
-#warning split to the more independent functions
 void Simulator::run() {
   while (!unitQueue_.empty()) {
-    for (auto i = 0; i < unitQueue_.size(); ++i) {
-      auto unitId = unitQueue_.front();
+    size_t queueSize = unitQueue_.size();
+    for (size_t i = 0; i < queueSize; ++i) {
+      uint32_t unitId = unitQueue_.front();
       unitQueue_.pop();
 
-      auto unit = getUnit(unitId);
+      processUnitTurn(unitId);
 
-      auto &currentCell = map_->getCell(unit->getX(), unit->getY());
-
-      auto [isAffected, targetId] = isAffectPossible(*unit);
-      if (isAffected) {
-        auto damageLevel = unit->attack(*units_[targetId]);
-        eventLog_.log(currentTick_,
-                      UnitAttacked{unit->getId(), targetId, damageLevel,
-                                   getUnit(targetId)->getHP()});
-      } else {
-        auto [nextX, nextY] = getNextStep(*unit);
-        unit->march(nextX, nextY);
-
-        if (nextX == unit->getTargetX() && nextY == unit->getTargetY()) {
-          eventLog_.log(currentTick_, MarchEnded{unit->getId(), nextX, nextY});
-        } else {
-          eventLog_.log(currentTick_, UnitMoved{unit->getId(), nextX, nextY});
-        }
-
-        auto &nextCell = map_->getCell(nextX, nextY);
-        nextCell.setUnit(unit);
-        currentCell.removeUnit();
-      }
-
-      // погибших отбрасываем, выжившие снова в бой
-      if (unit->getHP() > 0) {
+      // Погибшие в зал славы, выжившие сражаются/двигаются дальше
+      if (units_.at(unitId)->getHP() > 0) {
         unitQueue_.push(unitId);
       } else {
-        units_.erase(unitId);
-        eventLog_.log(currentTick_, UnitDied{unitId});
+        handleDeadUnit(unitId);
       }
     }
 
-    if (unitQueue_.size() <= 1) {
-#warning "maybe we should anounce winner here"
+    if (checkSimulationEnd()) {
       break;
     }
 
     currentTick_++;
+  }
+}
+
+void Simulator::processUnitTurn(uint32_t unitId) {
+  auto unit = getUnit(unitId);
+  auto &currentCell = map_->getCell(unit->getX(), unit->getY());
+
+  auto [isAffected, targetId] = isAffectPossible(*unit);
+  if (isAffected) {
+    processAttack(unit, targetId);
+  } else {
+    processMovement(unit);
   }
 }
 
@@ -92,6 +79,29 @@ AffectedUnit Simulator::isAffectPossible(const Unit &activeUnit) {
   return std::make_tuple(false, 0);
 }
 
+void Simulator::processAttack(std::shared_ptr<Unit> &unit, uint32_t targetId) {
+  auto damageLevel = unit->attack(*units_[targetId]);
+  eventLog_.log(currentTick_, UnitAttacked{unit->getId(), targetId, damageLevel,
+                                           getUnit(targetId)->getHP()});
+}
+
+void Simulator::processMovement(std::shared_ptr<Unit> &unit) {
+  auto [nextX, nextY] = getNextStep(*unit);
+  unit->march(nextX, nextY);
+
+  if (nextX == unit->getTargetX() && nextY == unit->getTargetY()) {
+    eventLog_.log(currentTick_, MarchEnded{unit->getId(), nextX, nextY});
+  } else {
+    eventLog_.log(currentTick_, UnitMoved{unit->getId(), nextX, nextY});
+  }
+
+  auto &currentCell = map_->getCell(unit->getX(), unit->getY());
+  auto &nextCell = map_->getCell(nextX, nextY);
+
+  nextCell.setUnit(unit);
+  currentCell.removeUnit();
+}
+
 Coordinates Simulator::getNextStep(const Unit &unit) {
   uint32_t currentX = unit.getX();
   uint32_t currentY = unit.getY();
@@ -103,6 +113,21 @@ Coordinates Simulator::getNextStep(const Unit &unit) {
   uint32_t dy = (targetY > currentY) ? 1 : (targetY < currentY) ? -1 : 0;
 
   return {currentX + dx, currentY + dy};
+}
+
+void Simulator::handleDeadUnit(uint32_t unitId) {
+  units_.erase(unitId);
+  eventLog_.log(currentTick_, UnitDied{unitId});
+}
+
+bool Simulator::checkSimulationEnd() {
+  if (unitQueue_.size() <= 1) {
+    eventLog_.log(currentTick_, UnitWon{unitQueue_.front()});
+    return true;
+  }
+#warning "Second condition should be added here no units to move"
+
+  return false;
 }
 
 const Map &Simulator::getMap() const {
