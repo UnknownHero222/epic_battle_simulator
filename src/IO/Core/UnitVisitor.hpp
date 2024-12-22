@@ -4,6 +4,7 @@
 #include "Units/Hunter.hpp"
 #include "Units/Swordsman.hpp"
 #include "Units/Tower.hpp"
+#include "Units/Griffon.hpp"
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -51,6 +52,8 @@ public:
                                       range_);
     case UnitType::UnitTower:
       return std::make_shared<Tower>(unitId_, x_, y_, hp_, power_, range_);
+    case UnitType::UnitGriffon:
+      return std::make_shared<Griffon>(unitId_, x_, y_, hp_, agility_);
     default:
       break;
     }

@@ -21,7 +21,7 @@ add_library(${target} STATIC
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/Units/Hunter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/Units/Hunter.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/Units/Tower.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Units/Tower.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Units/Griffon.hpp
 )
 
 target_include_directories(${target} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

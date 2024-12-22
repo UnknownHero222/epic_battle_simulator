@@ -2,6 +2,7 @@
 
 #include "IO/Commands/CreateMap.hpp"
 #include "IO/Commands/March.hpp"
+#include "IO/Commands/SpawnGriffon.hpp"
 #include "IO/Commands/SpawnHunter.hpp"
 #include "IO/Commands/SpawnSwordsman.hpp"
 #include "IO/Commands/SpawnTower.hpp"
@@ -84,6 +85,9 @@ public:
     } else if constexpr (std::is_same_v<TCommand, SpawnTower>) {
       unit = std::make_shared<Tower>(command.unitId, command.x, command.y,
                                      command.hp, command.power, command.range);
+    } else if constexpr (std::is_same_v<TCommand, SpawnGriffon>) {
+      unit = std::make_shared<Griffon>(command.unitId, command.x, command.y,
+                                       command.hp, command.agility);
     } else {
       throw std::runtime_error("Unsupported unit type");
     }

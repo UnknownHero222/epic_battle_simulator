@@ -4,7 +4,7 @@
 
 namespace sw::core {
 
-enum UnitType { UnitSwordsman, UnitHunter, UnitTower };
+enum UnitType { UnitSwordsman, UnitHunter, UnitTower, UnitGriffon };
 
 class Unit {
 public:
