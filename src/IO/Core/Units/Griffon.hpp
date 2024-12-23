@@ -5,6 +5,8 @@
 
 namespace sw::core {
 
+static constexpr auto kGriffonDefaultAttackRange = 2;
+
 class Griffon : public Unit {
 public:
   Griffon(uint32_t id, uint32_t x, uint32_t y, uint32_t hp, uint32_t agility);
@@ -13,7 +15,9 @@ public:
 
   uint32_t attack(Unit &targetUnit) override;
 
-  uint32_t getAffectRange() const override { return 2; };
+  uint32_t getAffectRange() const override {
+    return kGriffonDefaultAttackRange;
+  };
 
 private:
   uint32_t agility_;

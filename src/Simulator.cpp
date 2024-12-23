@@ -34,6 +34,10 @@ void Simulator::run() {
       break;
     }
 
+    if (allUnitsAtTargets()) {
+      break;
+    }
+
     currentTick_++;
   }
 }
@@ -142,9 +146,21 @@ bool Simulator::checkSimulationEnd() {
     eventLog_.log(currentTick_, UnitWon{unitQueue_.front(), unit->getType()});
     return true;
   }
-#warning "Second condition should be added here no units to move"
 
   return false;
+}
+
+bool Simulator::allUnitsAtTargets() {
+  for (const auto &[id, unit] : units_) {
+    if (unit->getX() != unit->getTargetX() ||
+        unit->getY() != unit->getTargetY()) {
+      return false;
+    }
+  }
+
+  eventLog_.log(currentTick_,
+                    AllTargetsReached{"All units reached their targets"});
+  return true;
 }
 
 const Map &Simulator::getMap() const {

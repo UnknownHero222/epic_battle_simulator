@@ -17,6 +17,7 @@
 #include "IO/Events/UnitMoved.hpp"
 #include "IO/Events/UnitSpawned.hpp"
 #include "IO/Events/UnitWon.hpp"
+#include "IO/Events/AllTargetsReached.hpp"
 #include "IO/System/CommandParser.hpp"
 #include "IO/System/EventLog.hpp"
 #include "IO/System/PrintDebug.hpp"
@@ -131,6 +132,8 @@ private:
 
   void handleDeadUnit(uint32_t unitId);
   bool checkSimulationEnd();
+
+  bool allUnitsAtTargets();
 
   std::shared_ptr<Unit> getUnit(uint32_t unitId);
 
