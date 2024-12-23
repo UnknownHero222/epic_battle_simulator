@@ -139,8 +139,7 @@ void Simulator::handleDeadUnit(uint32_t unitId) {
 bool Simulator::checkSimulationEnd() {
   if (unitQueue_.size() <= 1) {
     auto unit = getUnit(unitQueue_.front());
-    eventLog_.log(currentTick_,
-                  UnitWon{unitQueue_.front(), unit->getUnitName()});
+    eventLog_.log(currentTick_, UnitWon{unitQueue_.front(), unit->getType()});
     return true;
   }
 #warning "Second condition should be added here no units to move"

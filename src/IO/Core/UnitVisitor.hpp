@@ -1,15 +1,17 @@
 #pragma once
 
-#include "Units/Unit.hpp"
+#include "Units/Griffon.hpp"
 #include "Units/Hunter.hpp"
 #include "Units/Swordsman.hpp"
 #include "Units/Tower.hpp"
-#include "Units/Griffon.hpp"
+#include "Units/Unit.hpp"
 #include <memory>
 #include <stdexcept>
 #include <string>
 
 namespace sw::core {
+
+enum UnitType { UnitSwordsman, UnitHunter, UnitTower, UnitGriffon };
 
 class UnitVisitor {
 public:
@@ -20,6 +22,8 @@ public:
       unitType_ = UnitType::UnitHunter;
     } else if (name == "SPAWN_TOWER") {
       unitType_ = UnitType::UnitTower;
+    } else if (name == "SPAWN_GRIFFON") {
+      unitType_ = UnitType::UnitGriffon;
     } else {
       throw std::runtime_error("Unsupported unit type");
     }

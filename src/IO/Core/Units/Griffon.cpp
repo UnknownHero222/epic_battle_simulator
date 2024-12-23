@@ -6,7 +6,7 @@ namespace sw::core {
 
 Griffon::Griffon(uint32_t id, uint32_t x, uint32_t y, uint32_t hp,
                  uint32_t agility)
-    : Unit(id, UnitType::UnitGriffon, x, y, hp), agility_(agility) {
+    : Unit(id, "Griffon", x, y, hp), agility_(agility) {
   isFlying_ = true;
 }
 

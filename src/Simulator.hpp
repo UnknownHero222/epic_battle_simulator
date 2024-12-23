@@ -97,7 +97,7 @@ public:
 
     unitQueue_.push(command.unitId);
 
-    eventLog_.log(currentTick_, UnitSpawned{command.unitId, unit->getUnitName(),
+    eventLog_.log(currentTick_, UnitSpawned{command.unitId, unit->getType(),
                                             command.x, command.y});
   }
 

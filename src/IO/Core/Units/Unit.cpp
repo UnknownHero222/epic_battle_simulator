@@ -21,19 +21,4 @@ void Unit::setTarget(uint32_t x, uint32_t y) {
   targetY_ = y;
 }
 
-std::string Unit::getUnitName() const {
-  switch (type_) {
-  case UnitSwordsman:
-    return "Swordsman";
-  case UnitHunter:
-    return "Hunter";
-  case UnitTower:
-    return "Tower";
-  case UnitGriffon:
-    return "Griffon";
-  default:
-    return "Unknown";
-  }
-}
-
 } // namespace sw::core
