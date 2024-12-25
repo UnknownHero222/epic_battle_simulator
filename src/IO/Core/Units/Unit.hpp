@@ -16,9 +16,8 @@ public:
   virtual ~Unit() = default;
 
   virtual void march();
-#warning "Check this again later"
-  virtual uint32_t attack(Unit &targetUnit){};
-  virtual uint32_t getAffectRange() const {};
+  virtual uint32_t attack(Unit &targetUnit) { return 0; };
+  virtual uint32_t getAffectRange() const { return 0; };
   virtual bool canAttack(const Unit &targetUnit) const { return true; };
 
   uint32_t getId() const { return id_; }
