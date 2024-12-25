@@ -1,7 +1,7 @@
 #include "Simulator.hpp"
 #include <iostream>
-#include <stdexcept>
 #include <limits>
+#include <stdexcept>
 
 namespace sw::simulator {
 
@@ -9,6 +9,10 @@ using namespace sw::core;
 using namespace sw::io;
 
 void Simulator::run() {
+  if (!map_) {
+    throw std::runtime_error("Map is not initialized.");
+  }
+
   while (!unitQueue_.empty()) {
     size_t queueSize = unitQueue_.size();
     for (size_t i = 0; i < queueSize; ++i) {
@@ -103,19 +107,26 @@ void Simulator::processMovement(std::shared_ptr<Unit> &unit) {
   }
 
   auto [nextX, nextY] = getNextStep(*unit);
-  unit->march(nextX, nextY);
 
-  if (nextX == unit->getTargetX() && nextY == unit->getTargetY()) {
-    eventLog_.log(currentTick_, MarchEnded{unit->getId(), nextX, nextY});
-  } else {
-    eventLog_.log(currentTick_, UnitMoved{unit->getId(), nextX, nextY});
+  if (!map_->isValidPosition(nextX, nextY)) {
+    throw std::out_of_range("Invalid position for the next point: [" +
+                            std::to_string(nextX) + ", " +
+                            std::to_string(nextY) + "]");
   }
+
+  unit->march(nextX, nextY);
 
   auto &currentCell = map_->getCell(unit->getX(), unit->getY());
   auto &nextCell = map_->getCell(nextX, nextY);
 
   nextCell.setUnit(unit);
   currentCell.removeUnit();
+
+  if (nextX == unit->getTargetX() && nextY == unit->getTargetY()) {
+    eventLog_.log(currentTick_, MarchEnded{unit->getId(), nextX, nextY});
+  } else {
+    eventLog_.log(currentTick_, UnitMoved{unit->getId(), nextX, nextY});
+  }
 }
 
 Coordinates Simulator::getNextStep(const Unit &unit) {
@@ -132,6 +143,10 @@ Coordinates Simulator::getNextStep(const Unit &unit) {
 }
 
 void Simulator::handleDeadUnit(uint32_t unitId) {
+  if (units_.find(unitId) == units_.end()) {
+    return;
+  }
+
   auto &currentCell =
       map_->getCell(getUnit(unitId)->getX(), getUnit(unitId)->getY());
   currentCell.removeUnit();
