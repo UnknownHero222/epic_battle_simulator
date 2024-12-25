@@ -106,15 +106,23 @@ void Simulator::processMovement(std::shared_ptr<Unit> &unit) {
     return;
   }
 
-  auto [nextX, nextY] = getNextStep(*unit);
+  if (!unit->isStartedMarch()) {
+    eventLog_.log(currentTick_, MarchStarted{unit->getId(), unit->getX(),
+                                             unit->getY(), unit->getTargetX(),
+                                             unit->getTargetY()});
+    unit->startMarch();
+  }
+
+  unit->march();
+
+  auto nextX = unit->getX();
+  auto nextY = unit->getY();
 
   if (!map_->isValidPosition(nextX, nextY)) {
     throw std::out_of_range("Invalid position for the next point: [" +
                             std::to_string(nextX) + ", " +
                             std::to_string(nextY) + "]");
   }
-
-  unit->march(nextX, nextY);
 
   auto &currentCell = map_->getCell(unit->getX(), unit->getY());
   auto &nextCell = map_->getCell(nextX, nextY);
@@ -123,23 +131,11 @@ void Simulator::processMovement(std::shared_ptr<Unit> &unit) {
   currentCell.removeUnit();
 
   if (nextX == unit->getTargetX() && nextY == unit->getTargetY()) {
+    unit->stopMarch();
     eventLog_.log(currentTick_, MarchEnded{unit->getId(), nextX, nextY});
   } else {
     eventLog_.log(currentTick_, UnitMoved{unit->getId(), nextX, nextY});
   }
-}
-
-Coordinates Simulator::getNextStep(const Unit &unit) {
-  uint32_t currentX = unit.getX();
-  uint32_t currentY = unit.getY();
-
-  uint32_t targetX = unit.getTargetX();
-  uint32_t targetY = unit.getTargetY();
-
-  uint32_t dx = (targetX > currentX) ? 1 : (targetX < currentX) ? -1 : 0;
-  uint32_t dy = (targetY > currentY) ? 1 : (targetY < currentY) ? -1 : 0;
-
-  return {currentX + dx, currentY + dy};
 }
 
 void Simulator::handleDeadUnit(uint32_t unitId) {

@@ -2,16 +2,16 @@
 
 namespace sw::core {
 
-void Unit::march(uint32_t targetX, uint32_t targetY) {
-  if (x_ < targetX) {
+void Unit::march() {
+  if (x_ < targetX_) {
     ++x_;
-  } else if (x_ > targetX) {
+  } else if (x_ > targetX_) {
     --x_;
   }
 
-  if (y_ < targetY) {
+  if (y_ < targetY_) {
     ++y_;
-  } else if (y_ > targetY) {
+  } else if (y_ > targetY_) {
     --y_;
   }
 }

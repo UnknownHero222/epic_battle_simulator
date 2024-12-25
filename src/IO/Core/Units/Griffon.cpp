@@ -10,16 +10,16 @@ Griffon::Griffon(uint32_t id, uint32_t x, uint32_t y, uint32_t hp,
   isFlying_ = true;
 }
 
-void Griffon::march(uint32_t targetX, uint32_t targetY) {
-  if (x_ < targetX) {
+void Griffon::march() {
+  if (x_ < targetX_) {
     x_ += 2;
-  } else if (x_ > targetX) {
+  } else if (x_ > targetX_) {
     x_ -= 2;
   }
 
-  if (y_ < targetY) {
+  if (y_ < targetY_) {
     y_ += 2;
-  } else if (y_ > targetY) {
+  } else if (y_ > targetY_) {
     y_ -= 2;
   }
 }

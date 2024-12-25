@@ -22,7 +22,6 @@ int main(int argc, char **argv) {
     throw std::runtime_error("Error: File not found - " + std::string(argv[1]));
   }
 
-  // Example for the brutal debugging
   Simulator simulator;
 
   CommandParser parser;
@@ -41,8 +40,6 @@ int main(int argc, char **argv) {
           [&](auto command) { simulator.marchUnit(std::cout, command); });
 
   parser.parse(file);
-
-  std::cout << "\n\nEvents:\n";
 
   simulator.run();
 

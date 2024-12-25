@@ -11,7 +11,7 @@ class Griffon : public Unit {
 public:
   Griffon(uint32_t id, uint32_t x, uint32_t y, uint32_t hp, uint32_t agility);
 
-  void march(uint32_t targetX, uint32_t targetY) override;
+  void march() override;
 
   uint32_t attack(Unit &targetUnit) override;
 

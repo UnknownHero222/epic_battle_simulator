@@ -9,7 +9,9 @@ namespace sw::core {
 
 Tower::Tower(uint32_t id, uint32_t x, uint32_t y, uint32_t hp, uint32_t power,
              uint32_t range)
-    : Unit(id, "Tower", x, y, hp), power_(power), range_(range) {}
+    : Unit(id, "Tower", x, y, hp), power_(power), range_(range) {
+  isMovable_ = false;
+}
 
 uint32_t Tower::attack(Unit &targetUnit) {
   uint32_t distance =

@@ -4,6 +4,8 @@
 
 namespace sw::core {
 
+using Coordinates = std::pair<uint32_t, uint32_t>;
+
 class Unit {
 public:
   Unit() = default;
@@ -13,7 +15,7 @@ public:
 
   virtual ~Unit() = default;
 
-  virtual void march(uint32_t targetX, uint32_t targetY);
+  virtual void march();
 #warning "Check this again later"
   virtual uint32_t attack(Unit &targetUnit){};
   virtual uint32_t getAffectRange() const {};
@@ -30,6 +32,9 @@ public:
   void setTarget(uint32_t x, uint32_t y);
   bool isMovable() const { return isMovable_; }
   bool isFlying() const { return isFlying_; }
+  bool isStartedMarch() const { return isStartedMarch_; }
+  void startMarch() { isStartedMarch_ = true; }
+  void stopMarch() { isStartedMarch_ = false; }
 
 protected:
   uint32_t id_;
@@ -40,6 +45,7 @@ protected:
   uint32_t targetX_;
   uint32_t targetY_;
   std::string name_;
+  bool isStartedMarch_{false};
   bool isMovable_{true};
   bool isFlying_{false};
 

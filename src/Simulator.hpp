@@ -33,8 +33,6 @@ using namespace sw::io;
 using namespace sw::core;
 
 using AffectedUnit = std::tuple<bool, uint32_t>;
-using Coordinates = std::pair<uint32_t, uint32_t>;
-
 class Simulator {
 public:
   Simulator() = default;
@@ -44,9 +42,6 @@ public:
 
   template <typename TCommand>
   void createMap(std::ostream &stream, TCommand &command) {
-    // static_assert(std::is_same_v<TCommand, sw::io::CreateMap>, "Invalid
-    // command type for createMap");
-
     if (command.width == 0 || command.height == 0) {
       throw std::invalid_argument("Map dimensions must be greater than zero.");
     }
@@ -58,16 +53,17 @@ public:
 
   template <typename TCommand>
   void spawnUnit(std::ostream &stream, TCommand &command) {
-    // static_assert(std::is_same_v<TCommand, sw::io::SpawnSwordsman> ||
-    //               std::is_same_v<TCommand, sw::io::SpawnHunter>, "Invalid
-    //               command type for spawnUnit");
-
     if (!map_) {
       throw std::runtime_error("Map is not initialized.");
     }
 
     if (!map_->isValidPosition(command.x, command.y)) {
       throw std::out_of_range("Invalid spawn position.");
+    }
+
+    if (units_.find(command.unitId) != units_.end()) {
+      throw std::runtime_error("Unit ID " + std::to_string(command.unitId) +
+                               " already exists."); 
     }
 
     auto &cell = map_->getCell(command.x, command.y);
@@ -107,7 +103,7 @@ public:
     auto unit = getUnit(command.unitId);
 
     if (!map_->isValidPosition(command.targetX, command.targetY)) {
-      throw std::out_of_range("Invalid target position.");
+      throw std::runtime_error("Invalid target position.");
     }
 
     if (units_.find(command.unitId) != units_.end()) {
@@ -128,7 +124,6 @@ private:
   void processAttack(std::shared_ptr<Unit> &unit, uint32_t targetId);
 
   void processMovement(std::shared_ptr<Unit> &unit);
-  Coordinates getNextStep(const Unit &unit);
 
   void handleDeadUnit(uint32_t unitId);
   bool hasWinner();
