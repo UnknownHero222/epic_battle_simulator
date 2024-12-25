@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Units/Griffon.hpp"
 #include "Units/Hunter.hpp"
 #include "Units/Swordsman.hpp"
 #include "Units/Tower.hpp"
+#include "Units/Griffon.hpp"
 #include "Units/Unit.hpp"
 #include <memory>
 #include <stdexcept>

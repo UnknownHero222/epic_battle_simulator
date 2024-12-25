@@ -1,12 +1,17 @@
-cmake_minimum_required(VERSION 3.27)
+cmake_minimum_required(VERSION 3.20)
 project(total_battle_sim_test)
 
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+include(FetchContent)
+FetchContent_Declare(
+    googletest
+    URL https://github.com/google/googletest/archive/refs/tags/release-1.12.1.zip
+)
+FetchContent_MakeAvailable(googletest)
 
 add_subdirectory(src)
 
-file(GLOB_RECURSE SOURCES src/*.cpp src/*.hpp)
-add_executable(sw_battle_test ${SOURCES})
-
-target_include_directories(sw_battle_test PUBLIC src/)
-
+enable_testing()
+add_subdirectory(tests)

@@ -1,19 +1,14 @@
-cmake_minimum_required(VERSION 3.10)
-
-project(TotalBattleSimulator)
+add_executable(TotalBattleSimulator
+    main.cpp
+    Simulator.cpp
+)
 
 add_subdirectory(IO)
 
-set(target TotalBattleSimulator)
+target_link_libraries(TotalBattleSimulator PRIVATE IO)
 
-add_executable(${target} Main.cpp Simulator.cpp)
-
-target_link_libraries(${target} PRIVATE Core IO)
-
-target_include_directories(${target} PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/Core
+target_include_directories(TotalBattleSimulator PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/IO
 )
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+target_compile_options(TotalBattleSimulator PRIVATE -Wno-unknown-pragmas)

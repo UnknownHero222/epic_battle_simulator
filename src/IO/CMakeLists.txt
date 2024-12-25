@@ -1,29 +1,27 @@
-set(target IO)
+add_library(IO STATIC
+    Commands/CreateMap.hpp
+    Events/MapCreated.hpp
 
-add_library(${target} STATIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/Commands/CreateMap.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Events/MapCreated.hpp
+    System/CommandParser.cpp
+    System/CommandParser.hpp
+    System/EventLog.hpp
+    System/PrintDebug.hpp
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/System/CommandParser.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/System/CommandParser.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/System/EventLog.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/System/PrintDebug.hpp
+    Core/Map.cpp
+    Core/Map.hpp
+    Core/MapVisitor.hpp
+    Core/UnitVisitor.hpp
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Map.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Map.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Core/MapVisitor.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Core/UnitVisitor.hpp
-
-    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Units/Unit.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Units/Unit.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Units/Swordsman.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Units/Swordsman.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Units/Hunter.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Units/Hunter.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Units/Tower.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Units/Griffon.hpp
+    Core/Units/Unit.cpp
+    Core/Units/Unit.hpp
+    Core/Units/Swordsman.cpp
+    Core/Units/Swordsman.hpp
+    Core/Units/Hunter.cpp
+    Core/Units/Hunter.hpp
+    Core/Units/Tower.cpp
+    Core/Units/Griffon.cpp
 )
 
-target_include_directories(${target} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(IO PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
-target_compile_options(${target} PRIVATE -Wno-unknown-pragmas)
+target_compile_options(IO PRIVATE -Wno-unknown-pragmas)

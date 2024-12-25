@@ -1,6 +1,7 @@
 #include "Simulator.hpp"
 #include <iostream>
 #include <stdexcept>
+#include <limits>
 
 namespace sw::simulator {
 
@@ -30,7 +31,7 @@ void Simulator::run() {
       }
     }
 
-    if (checkSimulationEnd()) {
+    if (hasWinner()) {
       break;
     }
 
@@ -140,7 +141,7 @@ void Simulator::handleDeadUnit(uint32_t unitId) {
   eventLog_.log(currentTick_, UnitDied{unitId});
 }
 
-bool Simulator::checkSimulationEnd() {
+bool Simulator::hasWinner() {
   if (unitQueue_.size() <= 1) {
     auto unit = getUnit(unitQueue_.front());
     eventLog_.log(currentTick_, UnitWon{unitQueue_.front(), unit->getType()});
@@ -159,7 +160,7 @@ bool Simulator::allUnitsAtTargets() {
   }
 
   eventLog_.log(currentTick_,
-                    AllTargetsReached{"All units reached their targets"});
+                AllTargetsReached{"All units reached their targets"});
   return true;
 }
 

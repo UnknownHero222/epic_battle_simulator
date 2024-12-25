@@ -9,6 +9,7 @@
 #include "IO/Core/Map.hpp"
 #include "IO/Core/MapVisitor.hpp"
 #include "IO/Core/UnitVisitor.hpp"
+#include "IO/Events/AllTargetsReached.hpp"
 #include "IO/Events/MapCreated.hpp"
 #include "IO/Events/MarchEnded.hpp"
 #include "IO/Events/MarchStarted.hpp"
@@ -17,7 +18,6 @@
 #include "IO/Events/UnitMoved.hpp"
 #include "IO/Events/UnitSpawned.hpp"
 #include "IO/Events/UnitWon.hpp"
-#include "IO/Events/AllTargetsReached.hpp"
 #include "IO/System/CommandParser.hpp"
 #include "IO/System/EventLog.hpp"
 #include "IO/System/PrintDebug.hpp"
@@ -131,7 +131,7 @@ private:
   Coordinates getNextStep(const Unit &unit);
 
   void handleDeadUnit(uint32_t unitId);
-  bool checkSimulationEnd();
+  bool hasWinner();
 
   bool allUnitsAtTargets();
 
