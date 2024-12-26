@@ -20,6 +20,7 @@ add_library(IO STATIC
     Core/Units/Hunter.hpp
     Core/Units/Tower.cpp
     Core/Units/Griffon.cpp
+    Core/Units/Healer.cpp
 )
 
 target_include_directories(IO PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

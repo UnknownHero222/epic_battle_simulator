@@ -3,6 +3,7 @@
 #include "IO/Commands/CreateMap.hpp"
 #include "IO/Commands/March.hpp"
 #include "IO/Commands/SpawnGriffon.hpp"
+#include "IO/Commands/SpawnHealer.hpp"
 #include "IO/Commands/SpawnHunter.hpp"
 #include "IO/Commands/SpawnSwordsman.hpp"
 #include "IO/Commands/SpawnTower.hpp"
@@ -85,6 +86,9 @@ public:
     } else if constexpr (std::is_same_v<TCommand, SpawnGriffon>) {
       unit = std::make_shared<Griffon>(command.unitId, command.x, command.y,
                                        command.hp, command.agility);
+    } else if constexpr (std::is_same_v<TCommand, SpawnHealer>) {
+      unit = std::make_shared<Healer>(command.unitId, command.x, command.y,
+                                      command.hp, command.range, command.spirit);
     } else {
       throw std::runtime_error("Unsupported unit type");
     }
@@ -123,7 +127,7 @@ private:
   std::shared_ptr<Unit> getTargetCandidate(const Unit &activeUnit, int x,
                                            int y);
 
-  void processAttack(std::shared_ptr<Unit> &unit, uint32_t targetId);
+  void processAction(std::shared_ptr<Unit> &unit, uint32_t targetId);
 
   void processMovement(std::shared_ptr<Unit> &unit);
 

@@ -10,10 +10,13 @@ public:
       : Unit(id, "Hunter", x, y, hp), agility_(agility), strength_(strength),
         range_(range) {}
 
-  uint32_t attack(Unit &targetUnit) override;
+  uint32_t action(Unit &targetUnit) override { return attack(targetUnit); }
 
   uint32_t getAffectRange() const override { return range_; }
   uint32_t getAgility() const { return agility_; }
+
+private:
+  uint32_t attack(Unit &targetUnit);
 
 private:
   uint32_t agility_;

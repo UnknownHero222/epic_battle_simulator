@@ -37,7 +37,9 @@ int main(int argc, char **argv) {
       .add<SpawnGriffon>(
           [&](auto command) { simulator.spawnUnit(std::cout, command); })
       .add<March>(
-          [&](auto command) { simulator.marchUnit(std::cout, command); });
+          [&](auto command) { simulator.marchUnit(std::cout, command); })
+      .add<SpawnHealer>(
+          [&](auto command) { simulator.spawnUnit(std::cout, command); });
 
   parser.parse(file);
 

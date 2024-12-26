@@ -19,7 +19,7 @@ void Simulator::run() {
       uint32_t unitId = unitQueue_.front();
       unitQueue_.pop();
 
-      // проверка жив ли еще юнит (если нет - в Зал Славы)
+      // а не погиб ли юнит на предыдущем ходу?
       if (getUnit(unitId)->getHP() <= 0) {
         handleDeadUnit(unitId);
         continue;
@@ -53,7 +53,7 @@ void Simulator::handleUnitAction(uint32_t unitId) {
 
   auto [isAffected, targetId] = isAffectPossible(*unit);
   if (isAffected) {
-    processAttack(unit, targetId);
+    processAction(unit, targetId);
   } else {
     processMovement(unit);
   }
@@ -112,8 +112,9 @@ std::shared_ptr<Unit> Simulator::getTargetCandidate(const Unit &activeUnit,
   return targetCandidate;
 }
 
-void Simulator::processAttack(std::shared_ptr<Unit> &unit, uint32_t targetId) {
-  auto damageLevel = unit->attack(*units_[targetId]);
+void Simulator::processAction(std::shared_ptr<Unit> &unit, uint32_t targetId) {
+#warning correct event should be logged here
+  auto damageLevel = unit->action(*units_[targetId]);
   eventLog_.log(currentTick_, UnitAttacked{unit->getId(), targetId, damageLevel,
                                            getUnit(targetId)->getHP()});
 }

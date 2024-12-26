@@ -1,9 +1,10 @@
 #pragma once
 
+#include "Units/Griffon.hpp"
+#include "Units/Healer.hpp"
 #include "Units/Hunter.hpp"
 #include "Units/Swordsman.hpp"
 #include "Units/Tower.hpp"
-#include "Units/Griffon.hpp"
 #include "Units/Unit.hpp"
 #include <memory>
 #include <stdexcept>
@@ -11,7 +12,7 @@
 
 namespace sw::core {
 
-enum UnitType { UnitSwordsman, UnitHunter, UnitTower, UnitGriffon };
+enum UnitType { UnitSwordsman, UnitHunter, UnitTower, UnitGriffon, UnitHealer };
 
 class UnitVisitor {
 public:
@@ -24,6 +25,8 @@ public:
       unitType_ = UnitType::UnitTower;
     } else if (name == "SPAWN_GRIFFON") {
       unitType_ = UnitType::UnitGriffon;
+    } else if (name == "SPAWN_HEALER") {
+      unitType_ = UnitType::UnitHealer;
     } else {
       throw std::runtime_error("Unsupported unit type");
     }
@@ -58,6 +61,8 @@ public:
       return std::make_shared<Tower>(unitId_, x_, y_, hp_, power_, range_);
     case UnitType::UnitGriffon:
       return std::make_shared<Griffon>(unitId_, x_, y_, hp_, agility_);
+    case UnitType::UnitHealer:
+      return std::make_shared<Healer>(unitId_, x_, y_, hp_, range_, spirit_);
     default:
       break;
     }
@@ -67,7 +72,8 @@ public:
 
 private:
   UnitType unitType_;
-  uint32_t unitId_, x_, y_, hp_, strength_, agility_, range_, power_;
+  uint32_t unitId_, x_, y_, hp_;
+  uint32_t strength_, agility_, range_, power_, spirit_;
 };
 
 } // namespace sw::core
