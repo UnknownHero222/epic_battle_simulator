@@ -70,20 +70,19 @@ AffectedUnit Simulator::isAffectPossible(const Unit &activeUnit) {
       int nx = activeUnit.getX() + dx;
       int ny = activeUnit.getY() + dy;
 
-      if (map_->isValidPosition(nx, ny)) {
-        auto &cell = map_->getCell(nx, ny);
-        if (!cell.is_empty()) {
-          auto targetCandidate = cell.getUnit();
-          if (targetCandidate &&
-              targetCandidate->getId() != activeUnit.getId() &&
-              activeUnit.canAttack(*targetCandidate)) {
-            // Простенькая приоритизация, бить будем по слабейшему
-            if (targetCandidate->getHP() < minHP) {
-              minHP = targetCandidate->getHP();
-              targetUnitId = targetCandidate->getId();
-            }
-          }
-        }
+      if (!map_->isValidPosition(nx, ny)) {
+        continue;
+      }
+
+      auto targetCandidate = getTargetCandidate(activeUnit, nx, ny);
+      if (!targetCandidate) {
+        continue;
+      }
+
+      // простенькая приоритизация цели - бьем по слабейшему
+      if (targetCandidate->getHP() < minHP) {
+        minHP = targetCandidate->getHP();
+        targetUnitId = targetCandidate->getId();
       }
     }
   }
@@ -93,6 +92,24 @@ AffectedUnit Simulator::isAffectPossible(const Unit &activeUnit) {
   }
 
   return std::make_tuple(false, 0);
+}
+
+std::shared_ptr<Unit> Simulator::getTargetCandidate(const Unit &activeUnit,
+                                                    int x, int y) {
+  auto &cell = map_->getCell(x, y);
+
+  if (cell.is_empty()) {
+    return nullptr;
+  }
+
+  auto targetCandidate = cell.getUnit();
+
+  if (!targetCandidate || targetCandidate->getId() == activeUnit.getId() ||
+      !activeUnit.canAttack(*targetCandidate)) {
+    return nullptr;
+  }
+
+  return targetCandidate;
 }
 
 void Simulator::processAttack(std::shared_ptr<Unit> &unit, uint32_t targetId) {
@@ -107,9 +124,9 @@ void Simulator::processMovement(std::shared_ptr<Unit> &unit) {
   }
 
   if (!unit->isStartedMarch()) {
-    eventLog_.log(currentTick_, MarchStarted{unit->getId(), unit->getX(),
-                                             unit->getY(), unit->getTargetX(),
-                                             unit->getTargetY()});
+    eventLog_.log(currentTick_,
+                  MarchStarted{unit->getId(), unit->getX(), unit->getY(),
+                               unit->getTargetX(), unit->getTargetY()});
     unit->startMarch();
   }
 

@@ -63,7 +63,7 @@ public:
 
     if (units_.find(command.unitId) != units_.end()) {
       throw std::runtime_error("Unit ID " + std::to_string(command.unitId) +
-                               " already exists."); 
+                               " already exists.");
     }
 
     auto &cell = map_->getCell(command.x, command.y);
@@ -120,6 +120,8 @@ private:
 
   void handleUnitAction(uint32_t unitId);
   AffectedUnit isAffectPossible(const Unit &activeUnit);
+  std::shared_ptr<Unit> getTargetCandidate(const Unit &activeUnit, int x,
+                                           int y);
 
   void processAttack(std::shared_ptr<Unit> &unit, uint32_t targetId);
 
