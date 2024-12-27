@@ -4,6 +4,12 @@ namespace sw::core {
 
 static constexpr auto kHunterStrengthAttackDistance = 1;
 
+ActionResult Hunter::action(Unit &targetUnit) {
+  auto damage = attack(targetUnit);
+
+  return {ActionType::Attack, damage, targetUnit.getId(), targetUnit.getHP()};
+}
+
 uint32_t Hunter::attack(Unit &targetUnit) {
   // Компилятор встает на дыбы (придется кастить к int'у)
   uint32_t distance =

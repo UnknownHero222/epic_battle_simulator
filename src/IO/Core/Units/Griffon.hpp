@@ -13,7 +13,7 @@ public:
 
   void march() override;
 
-  uint32_t action(Unit &targetUnit) override { return attack(targetUnit); };
+  ActionResult action(Unit &targetUnit) override;
 
   uint32_t getAffectRange() const override {
     return kGriffonDefaultAttackRange;

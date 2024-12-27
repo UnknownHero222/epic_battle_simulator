@@ -8,6 +8,13 @@ Healer::Healer(uint32_t id, uint32_t x, uint32_t y, uint32_t hp, uint32_t range,
   isAttackable_ = false;
 }
 
+ActionResult Healer::action(Unit &targetUnit) {
+  auto healedAmount = heal(targetUnit);
+
+  return {ActionType::Heal, healedAmount, targetUnit.getId(),
+          targetUnit.getHP()};
+}
+
 uint32_t Healer::heal(Unit &target) {
   if (target.getHP() == target.getMaxHP()) {
     return 0;

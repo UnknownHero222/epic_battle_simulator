@@ -1,4 +1,6 @@
 #pragma once
+
+#include "helpers/ActionResult.hpp"
 #include <string>
 #include <unordered_set>
 
@@ -16,7 +18,7 @@ public:
   virtual ~Unit() = default;
 
   virtual void march();
-  virtual uint32_t action(Unit &targetUnit) { return 0; };
+  virtual ActionResult action(Unit &targetUnit) { return {}; };
   virtual uint32_t getAffectRange() const { return 0; };
   virtual bool canAttack(const Unit &targetUnit) const { return true; };
   virtual bool isAttackable() const { return isAttackable_; }

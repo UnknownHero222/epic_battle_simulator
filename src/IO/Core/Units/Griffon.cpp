@@ -10,6 +10,12 @@ Griffon::Griffon(uint32_t id, uint32_t x, uint32_t y, uint32_t hp,
   isFlying_ = true;
 }
 
+ActionResult Griffon::action(Unit &targetUnit) {
+  auto damage = attack(targetUnit);
+
+  return {ActionType::Attack, damage, targetUnit.getId(), targetUnit.getHP()};
+}
+
 void Griffon::march() {
   if (x_ < targetX_) {
     x_ += 2;

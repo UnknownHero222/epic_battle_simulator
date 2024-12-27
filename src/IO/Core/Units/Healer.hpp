@@ -9,7 +9,7 @@ public:
   Healer(uint32_t id, uint32_t x, uint32_t y, uint32_t hp, uint32_t range,
          uint32_t spirit);
 
-  uint32_t action(Unit &targetUnit) override { return heal(targetUnit); };
+  ActionResult action(Unit &targetUnit) override;
 
   uint32_t getRange() const { return range_; }
   uint32_t getSpirit() const { return spirit_; }

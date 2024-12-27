@@ -8,7 +8,7 @@ public:
   Swordsman(uint32_t id, uint32_t x, uint32_t y, uint32_t hp, uint32_t strength)
       : Unit(id, "Swordsman", x, y, hp), strength_(strength) {}
 
-  uint32_t action(Unit &targetUnit) override { return attack(targetUnit); }
+  ActionResult action(Unit &targetUnit) override;
 
   uint32_t getAffectRange() const override { return 1; };
 

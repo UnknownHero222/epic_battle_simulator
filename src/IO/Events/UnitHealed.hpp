@@ -6,20 +6,20 @@
 namespace sw::io {
 
 struct UnitHealed {
-    uint32_t healerId;
-    uint32_t targetId;
-    uint32_t healedAmount;
-    uint32_t targetHp;
 
-    template <typename Visitor>
-    void visit(Visitor &visitor) {
-        visitor(healerId, "healerId");
-        visitor(targetId, "targetId");
-        visitor(healedAmount, "healedAmount");
-        visitor(targetHp, "targetHp");
-    }
+  static constexpr const char *Name = "UNIT_HEALED";
 
-    static constexpr const char *Name = "UNIT_HEALED";
+  uint32_t healerId{};
+  uint32_t targetUnitId{};
+  uint32_t healedAmount{};
+  uint32_t targetHp{};
+
+  template <typename Visitor> void visit(Visitor &visitor) {
+    visitor.visit("healerId", healerId);
+    visitor.visit("targetUnitId", targetUnitId);
+    visitor.visit("healedAmount", healedAmount);
+    visitor.visit("targetHp", targetHp);
+  }
 };
 
 } // namespace sw::io

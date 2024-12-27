@@ -119,10 +119,22 @@ std::shared_ptr<Unit> Simulator::getTargetCandidate(const Unit &activeUnit,
 }
 
 void Simulator::processAction(std::shared_ptr<Unit> unit, uint32_t targetId) {
-#warning correct event should be logged here
-  auto damageLevel = unit->action(*units_[targetId]);
-  eventLog_.log(currentTick_, UnitAttacked{unit->getId(), targetId, damageLevel,
-                                           getUnit(targetId)->getHP()});
+  auto actionResult = unit->action(*units_[targetId]);
+
+  switch (actionResult.type) {
+  case ActionType::Attack:
+    eventLog_.log(currentTick_,
+                  UnitAttacked{unit->getId(), targetId, actionResult.value,
+                               units_[targetId]->getHP()});
+    break;
+  case ActionType::Heal:
+    eventLog_.log(currentTick_,
+                  UnitHealed{unit->getId(), targetId, actionResult.value,
+                             units_[targetId]->getHP()});
+    break;
+  default:
+    break;
+  }
 }
 
 void Simulator::processMovement(std::shared_ptr<Unit> unit) {

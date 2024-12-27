@@ -15,6 +15,12 @@ Tower::Tower(uint32_t id, uint32_t x, uint32_t y, uint32_t hp, uint32_t power,
   setTarget(x, y);
 }
 
+ActionResult Tower::action(Unit &targetUnit) {
+  auto damage = attack(targetUnit);
+
+  return {ActionType::Attack, damage, targetUnit.getId(), targetUnit.getHP()};
+}
+
 uint32_t Tower::attack(Unit &targetUnit) {
   uint32_t distance =
       std::max(std::abs(static_cast<int>(targetUnit.getX() - getX())),

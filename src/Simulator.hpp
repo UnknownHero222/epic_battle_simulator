@@ -16,6 +16,7 @@
 #include "IO/Events/MarchStarted.hpp"
 #include "IO/Events/UnitAttacked.hpp"
 #include "IO/Events/UnitDied.hpp"
+#include "IO/Events/UnitHealed.hpp"
 #include "IO/Events/UnitMoved.hpp"
 #include "IO/Events/UnitSpawned.hpp"
 #include "IO/Events/UnitWon.hpp"

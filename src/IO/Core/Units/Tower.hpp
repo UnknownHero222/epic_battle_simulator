@@ -9,7 +9,7 @@ public:
   Tower(uint32_t id, uint32_t x, uint32_t y, uint32_t hp, uint32_t power,
         uint32_t range);
 
-  uint32_t action(Unit &targetUnit) override { return attack(targetUnit); }
+  ActionResult action(Unit &targetUnit) override;
 
 private:
   uint32_t attack(Unit &targetUnit);
