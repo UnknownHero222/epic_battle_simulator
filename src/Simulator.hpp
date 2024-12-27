@@ -87,14 +87,15 @@ public:
       unit = std::make_shared<Griffon>(command.unitId, command.x, command.y,
                                        command.hp, command.agility);
     } else if constexpr (std::is_same_v<TCommand, SpawnHealer>) {
-      unit = std::make_shared<Healer>(command.unitId, command.x, command.y,
-                                      command.hp, command.range, command.spirit);
+      unit =
+          std::make_shared<Healer>(command.unitId, command.x, command.y,
+                                   command.hp, command.range, command.spirit);
     } else {
       throw std::runtime_error("Unsupported unit type");
     }
 
     units_.emplace(command.unitId, unit);
-    cell.setUnit(unit);
+    cell.setUnit(unit->getId());
 
     unitQueue_.push(command.unitId);
 
@@ -127,9 +128,9 @@ private:
   std::shared_ptr<Unit> getTargetCandidate(const Unit &activeUnit, int x,
                                            int y);
 
-  void processAction(std::shared_ptr<Unit> &unit, uint32_t targetId);
+  void processAction(std::shared_ptr<Unit> unit, uint32_t targetId);
 
-  void processMovement(std::shared_ptr<Unit> &unit);
+  void processMovement(std::shared_ptr<Unit> unit);
 
   void handleDeadUnit(uint32_t unitId);
   bool hasWinner();

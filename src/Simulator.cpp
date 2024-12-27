@@ -102,24 +102,30 @@ std::shared_ptr<Unit> Simulator::getTargetCandidate(const Unit &activeUnit,
     return nullptr;
   }
 
-  auto targetCandidate = cell.getUnit();
+  auto targetCandidates = cell.getUnitIds();
 
-  if (!targetCandidate || targetCandidate->getId() == activeUnit.getId() ||
-      !activeUnit.canAttack(*targetCandidate)) {
-    return nullptr;
+  for (auto unitId : targetCandidates) {
+    if (unitId == activeUnit.getId()) {
+      continue;
+    }
+
+    auto targetCandidate = getUnit(unitId);
+    if (activeUnit.canAttack(*targetCandidate)) {
+      return targetCandidate;
+    }
   }
 
-  return targetCandidate;
+  return nullptr;
 }
 
-void Simulator::processAction(std::shared_ptr<Unit> &unit, uint32_t targetId) {
+void Simulator::processAction(std::shared_ptr<Unit> unit, uint32_t targetId) {
 #warning correct event should be logged here
   auto damageLevel = unit->action(*units_[targetId]);
   eventLog_.log(currentTick_, UnitAttacked{unit->getId(), targetId, damageLevel,
                                            getUnit(targetId)->getHP()});
 }
 
-void Simulator::processMovement(std::shared_ptr<Unit> &unit) {
+void Simulator::processMovement(std::shared_ptr<Unit> unit) {
   if (!unit->isMovable()) {
     return;
   }
@@ -145,14 +151,16 @@ void Simulator::processMovement(std::shared_ptr<Unit> &unit) {
   auto &currentCell = map_->getCell(unit->getX(), unit->getY());
   auto &nextCell = map_->getCell(nextX, nextY);
 
-  nextCell.setUnit(unit);
-  currentCell.removeUnit();
+  auto currentUnitId = unit->getId();
+
+  nextCell.setUnit(currentUnitId);
+  currentCell.removeUnit(currentUnitId);
 
   if (nextX == unit->getTargetX() && nextY == unit->getTargetY()) {
     unit->stopMarch();
-    eventLog_.log(currentTick_, MarchEnded{unit->getId(), nextX, nextY});
+    eventLog_.log(currentTick_, MarchEnded{currentUnitId, nextX, nextY});
   } else {
-    eventLog_.log(currentTick_, UnitMoved{unit->getId(), nextX, nextY});
+    eventLog_.log(currentTick_, UnitMoved{currentUnitId, nextX, nextY});
   }
 }
 
@@ -163,7 +171,7 @@ void Simulator::handleDeadUnit(uint32_t unitId) {
 
   auto &currentCell =
       map_->getCell(getUnit(unitId)->getX(), getUnit(unitId)->getY());
-  currentCell.removeUnit();
+  currentCell.removeUnit(unitId);
 
   units_.erase(unitId);
 

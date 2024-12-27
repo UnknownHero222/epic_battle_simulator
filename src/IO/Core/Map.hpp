@@ -1,13 +1,15 @@
 #pragma once
 
+#include "Units/Unit.hpp"
 #include <iostream>
 #include <memory>
 #include <stdexcept>
+#include <unordered_set>
 #include <vector>
 
 namespace sw::core {
 
-class Unit;
+using CellUnitsIds = std::unordered_set<uint32_t>;
 
 class Map {
 public:
@@ -21,15 +23,16 @@ public:
 
   class Cell {
   public:
-    bool is_empty() const { return !unit_; }
+    bool is_empty() const { return units_ids_.empty(); }
 
-    void setUnit(std::shared_ptr<Unit> unit) { unit_ = std::move(unit); }
+    void setUnit(uint32_t unitId) { units_ids_.insert(unitId); }
 
-    void removeUnit() { unit_.reset(); }
+    void removeUnit(uint32_t unitId) { units_ids_.erase(unitId); }
 
-    std::shared_ptr<Unit> getUnit() const { return unit_; }
+    CellUnitsIds getUnitIds() const { return units_ids_; }
 
   private:
+    CellUnitsIds units_ids_;
     std::shared_ptr<Unit> unit_;
   };
 
