@@ -144,7 +144,7 @@ TEST(UnitTest, RemoveDeadUnitFromCell) {
 
   unit->setHP(0);
   map.getCell(2, 2).removeUnit(unitId);
-  EXPECT_TRUE(map.getCell(2, 2).is_empty());
+  EXPECT_TRUE(map.getCell(2, 2).isEmpty());
 }
 
 // ================= Тесты для класса Map =================
@@ -162,10 +162,10 @@ TEST(MapTest, CellManipulation) {
 
   auto unitId = unit->getId();
   cell.setUnit(*unit);
-  EXPECT_FALSE(cell.is_empty());
+  EXPECT_FALSE(cell.isEmpty());
 
   cell.removeUnit(unitId);
-  EXPECT_TRUE(cell.is_empty());
+  EXPECT_TRUE(cell.isEmpty());
 }
 
 TEST(MapTest, FlyingUnitDoesNotOccupyCell) {
@@ -173,7 +173,7 @@ TEST(MapTest, FlyingUnitDoesNotOccupyCell) {
   auto griffon = std::make_shared<Griffon>(2, 2, 2, 50, 15);
   auto &cell = map.getCell(2, 2);
 
-  EXPECT_TRUE(cell.is_empty());
+  EXPECT_TRUE(cell.isEmpty());
 }
 
 int main(int argc, char **argv) {

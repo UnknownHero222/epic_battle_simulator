@@ -14,8 +14,11 @@ void Simulator::run() try {
   }
 
   while (!unitQueue_.empty()) {
-    size_t queueSize = unitQueue_.size();
-    for (size_t i = 0; i < queueSize; ++i) {
+    if (hasWinner() || allUnitsAtTargets()) {
+      break;
+    }
+
+    for (size_t i = 0; i < unitQueue_.size(); ++i) {
       uint32_t unitId = unitQueue_.front();
       unitQueue_.pop();
 
@@ -35,14 +38,6 @@ void Simulator::run() try {
       }
     }
 
-    if (hasWinner()) {
-      break;
-    }
-
-    if (allUnitsAtTargets()) {
-      break;
-    }
-
     currentTick_++;
   }
 } catch (const std::exception &ex) {
@@ -52,6 +47,7 @@ void Simulator::run() try {
 
 void Simulator::handleUnitAction(uint32_t unitId) {
   auto unit = getUnit(unitId);
+
   auto &currentCell = map_->getCell(unit->getX(), unit->getY());
 
   auto [isAffected, targetId] = isAffectPossible(*unit);
@@ -78,6 +74,7 @@ AffectedUnit Simulator::isAffectPossible(const Unit &activeUnit) {
       }
 
       auto targetCandidate = getTargetCandidate(activeUnit, nx, ny);
+
       if (!targetCandidate) {
         continue;
       }
