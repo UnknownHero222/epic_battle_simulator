@@ -10,6 +10,7 @@ using namespace sw::io;
 using namespace sw::simulator;
 
 int main(int argc, char **argv) {
+  
   using namespace sw;
 
   if (argc != 2) {

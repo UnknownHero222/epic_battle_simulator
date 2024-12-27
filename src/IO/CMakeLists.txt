@@ -1,28 +1,14 @@
-add_library(IO STATIC
-    Commands/CreateMap.hpp
-    Events/MapCreated.hpp
+set(target IO)
 
-    System/CommandParser.cpp
-    System/CommandParser.hpp
-    System/EventLog.hpp
-    System/PrintDebug.hpp
-
-    Core/Map.cpp
-    Core/Map.hpp
-    Core/MapVisitor.hpp
-    Core/UnitVisitor.hpp
-
-    Core/Units/Unit.cpp
-    Core/Units/Unit.hpp
-    Core/Units/Swordsman.cpp
-    Core/Units/Swordsman.hpp
-    Core/Units/Hunter.cpp
-    Core/Units/Hunter.hpp
-    Core/Units/Tower.cpp
-    Core/Units/Griffon.cpp
-    Core/Units/Healer.cpp
+file(GLOB_RECURSE SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.hpp
 )
 
-target_include_directories(IO PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+add_library(${target} STATIC ${SOURCES})
 
-target_compile_options(IO PRIVATE -Wno-unknown-pragmas)
+target_include_directories(${target} PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+target_compile_options(${target} PRIVATE -Wno-unknown-pragmas)

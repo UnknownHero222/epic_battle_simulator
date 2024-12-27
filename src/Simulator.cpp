@@ -8,6 +8,18 @@ namespace sw::simulator {
 using namespace sw::core;
 using namespace sw::io;
 
+Simulator::Simulator() {
+  initUnitsFactories();
+}
+
+void Simulator::initUnitsFactories() {
+  factories_[SpawnSwordsman::Name] = std::make_unique<SwordsmanFactory>();
+  factories_[SpawnHunter::Name] = std::make_unique<HunterFactory>();
+  factories_[SpawnTower::Name] = std::make_unique<TowerFactory>();
+  factories_[SpawnGriffon::Name] = std::make_unique<GriffonFactory>();
+  factories_[SpawnHealer::Name] = std::make_unique<HealerFactory>();
+}
+
 void Simulator::run() try {
   if (!map_) {
     throw std::runtime_error("Map is not initialized.");

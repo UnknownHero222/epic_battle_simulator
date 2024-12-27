@@ -10,6 +10,8 @@
 #include "IO/Core/Map.hpp"
 #include "IO/Core/MapVisitor.hpp"
 #include "IO/Core/UnitVisitor.hpp"
+#include "IO/Core/UnitParamsConverter.hpp"
+#include "IO/Core/UnitFactory.hpp"
 #include "IO/Events/AllTargetsReached.hpp"
 #include "IO/Events/MapCreated.hpp"
 #include "IO/Events/MarchEnded.hpp"
@@ -37,7 +39,7 @@ using namespace sw::core;
 using AffectedUnit = std::tuple<bool, uint32_t>;
 class Simulator {
 public:
-  Simulator() = default;
+  Simulator();
   ~Simulator() = default;
 
   void run();
@@ -70,27 +72,14 @@ public:
                                " already exists.");
     }
 
-    std::shared_ptr<Unit> unit{nullptr};
-    if constexpr (std::is_same_v<TCommand, SpawnSwordsman>) {
-      unit = std::make_shared<Swordsman>(command.unitId, command.x, command.y,
-                                         command.hp, command.strength);
-    } else if constexpr (std::is_same_v<TCommand, SpawnHunter>) {
-      unit = std::make_shared<Hunter>(command.unitId, command.x, command.y,
-                                      command.hp, command.agility,
-                                      command.strength, command.range);
-    } else if constexpr (std::is_same_v<TCommand, SpawnTower>) {
-      unit = std::make_shared<Tower>(command.unitId, command.x, command.y,
-                                     command.hp, command.power, command.range);
-    } else if constexpr (std::is_same_v<TCommand, SpawnGriffon>) {
-      unit = std::make_shared<Griffon>(command.unitId, command.x, command.y,
-                                       command.hp, command.agility);
-    } else if constexpr (std::is_same_v<TCommand, SpawnHealer>) {
-      unit =
-          std::make_shared<Healer>(command.unitId, command.x, command.y,
-                                   command.hp, command.range, command.spirit);
-    } else {
-      throw std::runtime_error("Unsupported unit type");
+    auto it = factories_.find(command.Name);
+    if (it == factories_.end()) {
+        throw std::runtime_error("Unsupported unit type:");
     }
+
+    auto unit_params = convertToParams(command);
+
+    std::shared_ptr<Unit> unit = it->second->createUnit(unit_params);
 
     auto &cell = map_->getCell(command.x, command.y);
     if (!cell.isEmpty() && !unit->isOccupyingCell()) {
@@ -99,7 +88,6 @@ public:
 
     units_.emplace(command.unitId, unit);
     cell.setUnit(*unit);
-
     unitQueue_.push(command.unitId);
 
     eventLog_.log(currentTick_, UnitSpawned{command.unitId, unit->getType(),
@@ -128,6 +116,7 @@ public:
   }
 
 private:
+  void initUnitsFactories();
   const Map &getMap() const;
 
   void handleUnitAction(uint32_t unitId);
@@ -149,6 +138,8 @@ private:
 private:
   std::unique_ptr<Map> map_;
   std::unordered_map<uint32_t, std::shared_ptr<Unit>> units_;
+  std::unordered_map<std::string, std::unique_ptr<UnitFactory>> factories_;
+
   EventLog eventLog_;
 
   uint32_t currentTick_{1};
