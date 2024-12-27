@@ -22,6 +22,7 @@ public:
   virtual uint32_t getAffectRange() const { return 0; };
   virtual bool canAttack(const Unit &targetUnit) const { return true; };
   virtual bool isAttackable() const { return isAttackable_; }
+  virtual bool isOccupyingCell() const { return isOccupyingCell_; }
 
   uint32_t getId() const { return id_; }
   std::string getType() const { return type_; }
@@ -53,7 +54,9 @@ protected:
   bool isStartedMarch_{false};
   bool isMovable_{true};
   bool isFlying_{false};
+  bool isOccupyingCell_{true};
 
+  // TODO если потребуется учитывать союзников
   std::unordered_set<uint32_t> alliedUnits_;
 };
 

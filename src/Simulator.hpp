@@ -43,7 +43,7 @@ public:
   void run();
 
   template <typename TCommand>
-  void createMap(std::ostream &stream, TCommand &command) {
+  void createMap(std::ostream &stream, TCommand &command) try {
     if (command.width == 0 || command.height == 0) {
       throw std::invalid_argument("Map dimensions must be greater than zero.");
     }
@@ -51,10 +51,12 @@ public:
     map_ = std::make_unique<Map>(command.width, command.height);
 
     eventLog_.log(currentTick_, MapCreated{command.width, command.height});
+  } catch (const std::exception &ex) {
+    std::cerr << "Error: " << ex.what() << std::endl;
   }
 
   template <typename TCommand>
-  void spawnUnit(std::ostream &stream, TCommand &command) {
+  void spawnUnit(std::ostream &stream, TCommand &command) try {
     if (!map_) {
       throw std::runtime_error("Map is not initialized.");
     }
@@ -66,11 +68,6 @@ public:
     if (units_.find(command.unitId) != units_.end()) {
       throw std::runtime_error("Unit ID " + std::to_string(command.unitId) +
                                " already exists.");
-    }
-
-    auto &cell = map_->getCell(command.x, command.y);
-    if (!cell.is_empty()) {
-      throw std::runtime_error("Cell is already occupied.");
     }
 
     std::shared_ptr<Unit> unit{nullptr};
@@ -95,17 +92,24 @@ public:
       throw std::runtime_error("Unsupported unit type");
     }
 
+    auto &cell = map_->getCell(command.x, command.y);
+    if (!cell.isEmpty() && !unit->isOccupyingCell()) {
+      throw std::runtime_error("Cell is already occupied.");
+    }
+
     units_.emplace(command.unitId, unit);
-    cell.setUnit(unit->getId());
+    cell.setUnit(*unit);
 
     unitQueue_.push(command.unitId);
 
     eventLog_.log(currentTick_, UnitSpawned{command.unitId, unit->getType(),
                                             command.x, command.y});
+  } catch (const std::exception &ex) {
+    std::cerr << "Error: " << ex.what() << std::endl;
   }
 
   template <typename TCommand>
-  void marchUnit(std::ostream &stream, TCommand &command) {
+  void marchUnit(std::ostream &stream, TCommand &command) try {
     auto unit = getUnit(command.unitId);
 
     if (!map_->isValidPosition(command.targetX, command.targetY)) {
@@ -119,6 +123,8 @@ public:
       throw std::runtime_error("Unit ID " + std::to_string(command.unitId) +
                                " not found!");
     }
+  } catch (const std::exception &ex) {
+    std::cerr << "Error: " << ex.what() << std::endl;
   }
 
 private:

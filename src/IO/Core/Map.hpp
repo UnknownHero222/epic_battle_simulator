@@ -4,12 +4,12 @@
 #include <iostream>
 #include <memory>
 #include <stdexcept>
-#include <unordered_set>
+#include <unordered_map>
 #include <vector>
 
 namespace sw::core {
 
-using CellUnitsIds = std::unordered_set<uint32_t>;
+using CellUnits = std::unordered_map<uint32_t, Unit>;
 
 class Map {
 public:
@@ -23,17 +23,37 @@ public:
 
   class Cell {
   public:
-    bool is_empty() const { return units_ids_.empty(); }
+    bool isEmpty() const {
+      if (units_.empty()) {
+        return true;
+      }
 
-    void setUnit(uint32_t unitId) { units_ids_.insert(unitId); }
+      for (const auto &[id, unit] : units_) {
+        if (!unit.isOccupyingCell()) {
+          return false;
+        }
+      }
 
-    void removeUnit(uint32_t unitId) { units_ids_.erase(unitId); }
+      return true;
+    }
 
-    CellUnitsIds getUnitIds() const { return units_ids_; }
+    void setUnit(const Unit &unit) { units_[unit.getId()] = unit; }
+
+    void removeUnit(uint32_t unitId) { units_.erase(unitId); }
+
+    std::vector<uint32_t> getUnitIds() const {
+      std::vector<uint32_t> ids;
+      ids.reserve(units_.size());
+
+      for (const auto &[id, _] : units_) {
+        ids.push_back(id);
+      }
+
+      return ids;
+    }
 
   private:
-    CellUnitsIds units_ids_;
-    std::shared_ptr<Unit> unit_;
+    CellUnits units_;
   };
 
   Cell &getCell(uint32_t x, uint32_t y) {

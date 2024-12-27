@@ -8,7 +8,7 @@ namespace sw::simulator {
 using namespace sw::core;
 using namespace sw::io;
 
-void Simulator::run() {
+void Simulator::run() try {
   if (!map_) {
     throw std::runtime_error("Map is not initialized.");
   }
@@ -45,6 +45,9 @@ void Simulator::run() {
 
     currentTick_++;
   }
+} catch (const std::exception &ex) {
+  std::cerr << "Error: " << ex.what() << std::endl;
+  return;
 }
 
 void Simulator::handleUnitAction(uint32_t unitId) {
@@ -98,7 +101,7 @@ std::shared_ptr<Unit> Simulator::getTargetCandidate(const Unit &activeUnit,
                                                     int x, int y) {
   auto &cell = map_->getCell(x, y);
 
-  if (cell.is_empty()) {
+  if (cell.isEmpty()) {
     return nullptr;
   }
 
@@ -165,7 +168,7 @@ void Simulator::processMovement(std::shared_ptr<Unit> unit) {
 
   auto currentUnitId = unit->getId();
 
-  nextCell.setUnit(currentUnitId);
+  nextCell.setUnit(*unit);
   currentCell.removeUnit(currentUnitId);
 
   if (nextX == unit->getTargetX() && nextY == unit->getTargetY()) {
