@@ -50,7 +50,8 @@ protected:
   uint32_t maxHP_;
   uint32_t targetX_;
   uint32_t targetY_;
-  bool isAttackable_{true};
+  // на случай если надо будет добавлять юнитов которых нельзя атаковать
+  bool isAttackable_{true}; 
   bool isStartedMarch_{false};
   bool isMovable_{true};
   bool isFlying_{false};

@@ -29,7 +29,7 @@ public:
       }
 
       for (const auto &[id, unit] : units_) {
-        if (!unit.isOccupyingCell()) {
+        if (unit.isOccupyingCell()) {
           return false;
         }
       }

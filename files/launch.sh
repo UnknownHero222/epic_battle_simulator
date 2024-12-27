@@ -3,23 +3,27 @@
 if [ $# -ne 1 ]; then
   echo "Usage: $0 <scenario_number>"
   echo "Available scenarios:"
-  echo "  1 - all_targets_reached_commands.txt"
-  echo "  2 - griffon_hunters_battle.txt"
-  echo "  3 - swodsman_hunter_battle.txt"
-  echo "  4 - tower_sw_hun_battle.txt"
+  echo "  1 - swordsman_vs_swordsman.txt"
+  echo "  2 - swordsman_vs_hunter.txt"
+  echo "  3 - swordsman_hunter_tower.txt"
+  echo "  4 - tower_vs_griffon.txt"
+  echo "  5 - all_targets_reached_commands.txt"
+  echo "  6 - all_units_battle.txt.txt"
   exit 1
 fi
 
 SCENARIOS=(
+  "swordsman_vs_swordsman.txt"
+  "swordsman_vs_hunter.txt"
+  "swordsman_hunter_tower.txt"
+  "tower_vs_griffon.txt"
   "all_targets_reached_commands.txt"
-  "griffon_hunters_battle.txt"
-  "swodsman_hunter_battle.txt"
-  "tower_sw_hun_battle.txt"
+  "all_units_battle.txt"
 )
 
 # тут пока просто вручную задам путь к файлам, надо бы как-то автоматизировать
-SCENARIO_DIR="../../files/commands"
-EXECUTABLE="./TotalBattleSimulator"
+SCENARIO_DIR="commands"
+EXECUTABLE="./../build/src/TotalBattleSimulator"
 
 if [[ $1 -lt 1 || $1 -gt ${#SCENARIOS[@]} ]]; then
   echo "Invalid scenario number. Choose between 1 and ${#SCENARIOS[@]}."

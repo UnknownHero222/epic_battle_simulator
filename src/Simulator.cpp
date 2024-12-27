@@ -14,8 +14,11 @@ void Simulator::run() try {
   }
 
   while (!unitQueue_.empty()) {
-    size_t queueSize = unitQueue_.size();
-    for (size_t i = 0; i < queueSize; ++i) {
+    if (hasWinner() || allUnitsAtTargets()) {
+      break;
+    }
+
+    for (size_t i = 0; i < unitQueue_.size(); ++i) {
       uint32_t unitId = unitQueue_.front();
       unitQueue_.pop();
 
@@ -35,14 +38,6 @@ void Simulator::run() try {
       }
     }
 
-    if (hasWinner()) {
-      break;
-    }
-
-    if (allUnitsAtTargets()) {
-      break;
-    }
-
     currentTick_++;
   }
 } catch (const std::exception &ex) {
@@ -52,6 +47,7 @@ void Simulator::run() try {
 
 void Simulator::handleUnitAction(uint32_t unitId) {
   auto unit = getUnit(unitId);
+
   auto &currentCell = map_->getCell(unit->getX(), unit->getY());
 
   auto [isAffected, targetId] = isAffectPossible(*unit);
@@ -78,6 +74,7 @@ AffectedUnit Simulator::isAffectPossible(const Unit &activeUnit) {
       }
 
       auto targetCandidate = getTargetCandidate(activeUnit, nx, ny);
+
       if (!targetCandidate) {
         continue;
       }
@@ -152,18 +149,13 @@ void Simulator::processMovement(std::shared_ptr<Unit> unit) {
     unit->startMarch();
   }
 
+  auto &currentCell = map_->getCell(unit->getX(), unit->getY());
+
   unit->march();
 
   auto nextX = unit->getX();
   auto nextY = unit->getY();
 
-  if (!map_->isValidPosition(nextX, nextY)) {
-    throw std::out_of_range("Invalid position for the next point: [" +
-                            std::to_string(nextX) + ", " +
-                            std::to_string(nextY) + "]");
-  }
-
-  auto &currentCell = map_->getCell(unit->getX(), unit->getY());
   auto &nextCell = map_->getCell(nextX, nextY);
 
   auto currentUnitId = unit->getId();
@@ -184,8 +176,10 @@ void Simulator::handleDeadUnit(uint32_t unitId) {
     return;
   }
 
+  auto unit = getUnit(unitId);
   auto &currentCell =
-      map_->getCell(getUnit(unitId)->getX(), getUnit(unitId)->getY());
+      map_->getCell(unit->getX(), unit->getY());
+  
   currentCell.removeUnit(unitId);
 
   units_.erase(unitId);
