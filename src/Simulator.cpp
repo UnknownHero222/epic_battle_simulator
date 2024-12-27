@@ -149,18 +149,13 @@ void Simulator::processMovement(std::shared_ptr<Unit> unit) {
     unit->startMarch();
   }
 
+  auto &currentCell = map_->getCell(unit->getX(), unit->getY());
+
   unit->march();
 
   auto nextX = unit->getX();
   auto nextY = unit->getY();
 
-  if (!map_->isValidPosition(nextX, nextY)) {
-    throw std::out_of_range("Invalid position for the next point: [" +
-                            std::to_string(nextX) + ", " +
-                            std::to_string(nextY) + "]");
-  }
-
-  auto &currentCell = map_->getCell(unit->getX(), unit->getY());
   auto &nextCell = map_->getCell(nextX, nextY);
 
   auto currentUnitId = unit->getId();
@@ -181,8 +176,10 @@ void Simulator::handleDeadUnit(uint32_t unitId) {
     return;
   }
 
+  auto unit = getUnit(unitId);
   auto &currentCell =
-      map_->getCell(getUnit(unitId)->getX(), getUnit(unitId)->getY());
+      map_->getCell(unit->getX(), unit->getY());
+  
   currentCell.removeUnit(unitId);
 
   units_.erase(unitId);
